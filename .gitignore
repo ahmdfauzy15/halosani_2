@@ -1,0 +1,24 @@
+# general
+node_modules/
+.env
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/*.env.*
+
+# Laravel backend
+/backend-laravel/vendor/
+/backend-laravel/node_modules/
+/backend-laravel/storage/*.key
+/backend-laravel/.env
+/backend-laravel/public/storage
+/backend-laravel/storage/*.log
+/backend-laravel/storage/framework/cache/data/*
+/backend-laravel/bootstrap/cache/*.php
+
+# React frontend
+/frontend-react/node_modules/
+/frontend-react/dist/
+/frontend-react/.env

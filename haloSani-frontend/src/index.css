@@ -142,3 +142,106 @@ input, textarea, select {
     background: #64748b;
   }
 }
+
+/* Add this to your index.css or create a new CSS file */
+
+/* Base styles for the motion div container */
+.motion-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Center the motion div on all devices */
+.motion-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Responsive motion div styles */
+.motion-responsive {
+  width: 100%;
+  max-width: 1200px; /* Adjust based on your design needs */
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .motion-responsive {
+    padding: 1rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+  
+  .motion-center {
+    padding: 0;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+}
+
+/* Tablet-specific styles */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .motion-responsive {
+    padding: 1.5rem;
+    margin: 1.5rem;
+    width: calc(100% - 3rem);
+  }
+}
+
+/* Animation base styles */
+.motion-animate {
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+
+/* Specific animation for your motion div */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeInUp {
+  animation-name: fadeInUp;
+}
+
+/* Loading spinner centering */
+.loading-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* For your specific motion div in the component */
+.main-motion-div {
+  width: 100%;
+  max-width: 90%;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .main-motion-div {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+}

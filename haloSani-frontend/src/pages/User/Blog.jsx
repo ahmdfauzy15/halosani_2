@@ -157,7 +157,7 @@ const Blog = () => {
         </motion.div>
 
         {/* Newsletter */}
-        <motion.section
+        {/* <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -181,7 +181,7 @@ const Blog = () => {
               </button>
             </div>
           </div>
-        </motion.section>
+        </motion.section> */}
       </main>
 
     </div>

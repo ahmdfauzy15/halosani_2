@@ -6,7 +6,11 @@ import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({ title: '', description: '', image: null });
+  const [newBlog, setNewBlog] = useState({ 
+    title: '', 
+    description: '', 
+    image: null 
+  });
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
@@ -30,13 +34,14 @@ const BlogPage = () => {
   const handleAddBlog = async (event) => {
     event.preventDefault();
     if (!newBlog.title || !newBlog.description || !newBlog.image) {
-      alert("Title, Description, and Image are required.");
+      alert("Title, description, and image are required");
       return;
     }
 
     const formData = new FormData();
     formData.append('title', newBlog.title);
-    formData.append('description', newBlog.description);
+    // Preserve line breaks in description
+    formData.append('description', newBlog.description.replace(/\n/g, '<br>'));
     formData.append('image', newBlog.image);
 
     setLoading(true);
@@ -64,7 +69,7 @@ const BlogPage = () => {
     if (file) {
       const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validFormats.includes(file.type)) {
-        alert('Please upload a valid image (jpeg, png, jpg)');
+        alert('Please upload a valid image (JPEG, PNG, JPG)');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
@@ -80,7 +85,7 @@ const BlogPage = () => {
   };
 
   const handleDeleteBlog = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this blog?')) return;
+    if (!window.confirm('Are you sure you want to delete this blog post?')) return;
     
     try {
       await api.delete(`/admin/blogs/${id}`, {
@@ -98,6 +103,12 @@ const BlogPage = () => {
     navigate('/admin/login');
   };
 
+  // Format description to preserve line breaks
+  const formatDescription = (text) => {
+    if (!text) return '';
+    return text.replace(/<br\s*\/?>/gi, '\n');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Desktop Sidebar */}
@@ -108,19 +119,6 @@ const BlogPage = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 md:ml-20 lg:ml-64 flex flex-col min-h-screen">
-        {/* Header */}
-        {/* <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Blog Management</h1>
-                <p className="text-gray-600 text-sm">Create and manage your blog posts</p>
-              </div>
-              
-            </div>
-          </div>
-        </div> */}
-
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -129,6 +127,9 @@ const BlogPage = () => {
               <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                   <h2 className="text-xl font-semibold text-gray-800">Create New Blog Post</h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Fill out the form below to create a new blog post
+                  </p>
                 </div>
                 
                 <div className="p-6">
@@ -136,7 +137,9 @@ const BlogPage = () => {
                     <div className="grid grid-cols-1 gap-6">
                       {/* Title */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Title <span className="text-red-500">*</span>
+                        </label>
                         <input
                           type="text"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
@@ -149,20 +152,27 @@ const BlogPage = () => {
 
                       {/* Content */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Content <span className="text-red-500">*</span>
+                        </label>
                         <textarea
-                          rows={6}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                          placeholder="Write your blog content here..."
+                          rows={8}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 whitespace-pre-wrap"
+                          placeholder="Write your blog content here... (Press Enter for new lines)"
                           value={newBlog.description}
                           onChange={(e) => setNewBlog({ ...newBlog, description: e.target.value })}
                           required
-                        ></textarea>
+                        />
+                        <p className="mt-1 text-sm text-gray-500">
+                          Note: Line breaks will be preserved in the published post
+                        </p>
                       </div>
 
                       {/* Image Upload */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">Featured Image (Required)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                          Featured Image <span className="text-red-500">*</span>
+                        </label>
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="flex-1">
                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-200">
@@ -184,7 +194,9 @@ const BlogPage = () => {
                                 <span className="text-sm font-medium text-gray-700">
                                   {newBlog.image ? newBlog.image.name : 'Click to upload image'}
                                 </span>
-                                <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Max 2MB)</span>
+                                <span className="text-xs text-gray-500 mt-1">
+                                  JPEG, PNG (Max 2MB)
+                                </span>
                               </label>
                             </div>
                           </div>
@@ -224,7 +236,7 @@ const BlogPage = () => {
                               Publishing...
                             </>
                           ) : (
-                            'Publish Blog'
+                            'Publish Blog Post'
                           )}
                         </button>
                       </div>
@@ -233,41 +245,49 @@ const BlogPage = () => {
                 </div>
               </div>
 
-              {/* Blog List */}
-              <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
-                {blogs.length} {blogs.length === 1 ? 'Post' : 'Posts'}
-              </div>
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                  <h2 className="text-xl font-semibold text-gray-800">Your Blog Posts</h2>
-                  <span className="text-sm text-gray-500">{blogs.length} {blogs.length === 1 ? 'entry' : 'entries'}</span>
+              {/* Blog List Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Your Blog Posts
+                </h2>
+                <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                  {blogs.length} {blogs.length === 1 ? 'Post' : 'Posts'}
                 </div>
+              </div>
 
-                
-
-                {blogs.length === 0 ? (
-                  <div className="p-8 text-center">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 className="mt-2 text-lg font-medium text-gray-900">No blog posts yet</h3>
-                    <p className="mt-1 text-sm text-gray-500">Get started by creating your first blog post.</p>
-                  </div>
-                ) : (
+              {/* Blog List */}
+              {blogs.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-8 text-center">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="mt-2 text-lg font-medium text-gray-900">
+                    No blog posts yet
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Get started by creating your first blog post above
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
                   <div className="divide-y divide-gray-200">
                     {blogs.map((blog) => (
                       <div key={blog.id} className="p-6 hover:bg-gray-50 transition duration-150">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center">
-                              <h3 className="text-lg font-semibold text-gray-900">{blog.title}</h3>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {blog.title}
+                              </h3>
                               <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                                 Published
                               </span>
                             </div>
-                            <p className="mt-2 text-gray-600 line-clamp-2">
-                              {blog.description}
-                            </p>
+                            
+                            {/* Formatted description with preserved line breaks */}
+                            <div className="mt-3 text-gray-600 whitespace-pre-line">
+                              {formatDescription(blog.description)}
+                            </div>
                             
                             {blog.image_url && (
                               <div className="mt-4">
@@ -301,8 +321,8 @@ const BlogPage = () => {
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

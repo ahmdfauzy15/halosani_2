@@ -23,7 +23,14 @@ const BlogDetail = () => {
           api.get('/user/blogs?limit=3')
         ]);
         
-        setBlog(blogResponse.data);
+        // Process the blog content to handle line breaks
+        const processedBlog = {
+          ...blogResponse.data,
+          description: blogResponse.data.description?.replace(/\n/g, '<br>'),
+          content: blogResponse.data.content?.replace(/\n/g, '<br>')
+        };
+        
+        setBlog(processedBlog);
         setRelatedBlogs(relatedResponse.data.filter(b => b.id !== parseInt(id)));
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch blog');
@@ -64,6 +71,13 @@ const BlogDetail = () => {
           }).catch(console.error);
         }
     }
+  };
+
+  // Function to render HTML with proper line breaks
+  const renderHTML = (htmlString) => {
+    return { 
+      __html: htmlString?.replace(/\n/g, '<br>') || '' 
+    };
   };
 
   if (loading) return (
@@ -145,20 +159,18 @@ const BlogDetail = () => {
                 {blog.title}
               </motion.h1>
               
-              {/* Added Description Section */}
+              {/* Description with proper line breaks */}
               {blog.description && (
-                <motion.p
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.45 }}
-                  className="text-lg text-gray-600 mb-6"
-                >
-                  {blog.description}
-                </motion.p>
+                  className="text-lg text-gray-600 mb-6 whitespace-pre-line"
+                  dangerouslySetInnerHTML={renderHTML(blog.description)}
+                />
               )}
 
               <div className="flex items-center space-x-4 mb-6">
-                  
                 <button 
                   onClick={() => handleShare()}
                   className="p-2 rounded-full text-gray-400 hover:bg-gray-100"
@@ -171,7 +183,7 @@ const BlogDetail = () => {
           </div>
         </motion.section>
 
-        {/* Blog Content */}
+        {/* Blog Content with proper line breaks */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -179,11 +191,14 @@ const BlogDetail = () => {
           className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl mb-16"
         >
           <article className="prose prose-lg max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+            <div 
+              className="whitespace-pre-line"
+              dangerouslySetInnerHTML={renderHTML(blog.content)} 
+            />
           </article>
         </motion.section>
 
-        {/* Author Section (Optional) */}
+        {/* Author Section */}
         {blog.author && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -203,7 +218,9 @@ const BlogDetail = () => {
               </div>
               <div>
                 <h4 className="font-bold text-gray-800">Written by {blog.author.name}</h4>
-                <p className="text-gray-600 text-sm">{blog.author.bio || 'Mental health expert'}</p>
+                <p className="text-gray-600 text-sm whitespace-pre-line">
+                  {blog.author.bio || 'Mental health expert'}
+                </p>
               </div>
             </div>
           </motion.div>
@@ -276,7 +293,7 @@ const BlogDetail = () => {
                         </span>
                       )}
                       <h3 className="text-xl font-bold text-gray-800 mb-2">{blog.title}</h3>
-                      <p className="text-gray-600 mb-4 line-clamp-3">
+                      <p className="text-gray-600 mb-4 line-clamp-3 whitespace-pre-line">
                         {blog.description}
                       </p>
                       <div className="flex justify-between items-center">
@@ -320,7 +337,6 @@ const BlogDetail = () => {
           </div>
         </motion.section>
       </main>
-
     </div>
   );
 };

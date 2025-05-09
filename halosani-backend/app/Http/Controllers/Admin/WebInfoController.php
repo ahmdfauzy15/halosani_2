@@ -12,33 +12,25 @@ class WebInfoController extends Controller
     // Get all info
     public function index()
     {
-        $data = WebInfo::all();
-        return response()->json($data);
+        return response()->json(WebInfo::all());
     }
 
     // Store new info
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'description' => 'required',
+            'description' => 'required|string',
             'contact' => 'required|string',
             'address' => 'required|string',
         ]);
 
-        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('web_infos', 'public');
+            $validated['image'] = $request->file('image')->store('web_infos', 'public');
         }
 
-        $webInfo = WebInfo::create([
-            'title' => $request->title,
-            'image' => $imagePath,
-            'description' => $request->description,
-            'contact' => $request->contact,
-            'address' => $request->address,
-        ]);
+        $webInfo = WebInfo::create($validated);
 
         return response()->json($webInfo, 201);
     }
@@ -55,28 +47,23 @@ class WebInfoController extends Controller
     {
         $webInfo = WebInfo::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'description' => 'required',
+            'description' => 'required|string',
             'contact' => 'required|string',
             'address' => 'required|string',
         ]);
 
         if ($request->hasFile('image')) {
-            // delete old image if exist
+            // Delete old image
             if ($webInfo->image) {
                 Storage::disk('public')->delete($webInfo->image);
             }
-            $webInfo->image = $request->file('image')->store('web_infos', 'public');
+            $validated['image'] = $request->file('image')->store('web_infos', 'public');
         }
 
-        $webInfo->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'contact' => $request->contact,
-            'address' => $request->address,
-        ]);
+        $webInfo->update($validated);
 
         return response()->json($webInfo);
     }

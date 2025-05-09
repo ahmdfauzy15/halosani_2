@@ -293,7 +293,7 @@ const Footer = () => {
                 </motion.a>
               ))}
             </div>
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <h4 className="text-sm font-medium mb-2">Subscribe to our newsletter</h4>
               <div className="flex">
                 <input
@@ -305,7 +305,7 @@ const Footer = () => {
                   Subscribe
                 </button>
               </div>
-            </div>
+            </div> */}
           </motion.div>
         </div>
 
@@ -316,7 +316,7 @@ const Footer = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p>&copy; {new Date().getFullYear()} MindfulApp. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} HaloSani Mental Health Platform.</p>
           <div className="mt-2 text-sm">
             <span className="opacity-75">Made with ❤️ for better mental health</span>
           </div>

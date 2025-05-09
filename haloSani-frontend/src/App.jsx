@@ -10,12 +10,15 @@ import BlogPage from './pages/Admin/BlogPage';
 import EditBlogPage from './pages/Admin/EditBlogPage';
 import EventCMS from './pages/Admin/EventCMS';
 import EbookCMS from './pages/Admin/EbookCMS';
+import WebInfo from './pages/Admin/WebInfo';
 import UserProtectedRoute from './components/UserProtectedRoute';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Blog from './pages/User/Blog';
 import BlogDetail from './pages/User/BlogDetail';
+import WebInfoPage from './pages/User/WebInfoPage';
+
 
 const App = () => {
   return (
@@ -37,6 +40,7 @@ const App = () => {
           <Route path="/admin/blogs/:id/edit" element={<EditBlogPage />} />
           <Route path="/admin/event-cms" element={<EventCMS />} />
           <Route path="/admin/ebook" element={<EbookCMS />} />
+          <Route path="/admin/webinfo" element={<WebInfo />} />
         </Route>
 
         {/* Protected User Routes with Header + Footer */}
@@ -44,6 +48,8 @@ const App = () => {
           <Route path="/user/dashboard" element={<UserHome />} />
           <Route path="/user/blogs" element={<Blog />} />
           <Route path="/user/blogs/:id" element={<BlogDetail />} />
+          <Route path="/user/webinfopage" element={<WebInfoPage />} />
+
         </Route>
 
         {/* Fallback */}

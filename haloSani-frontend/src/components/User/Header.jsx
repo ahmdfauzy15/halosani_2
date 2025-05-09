@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiHome, FiBook, FiUser, FiLogIn, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiBook, FiUser, FiLogIn, FiLogOut,FiInfo } from 'react-icons/fi';
 import { FaBrain } from 'react-icons/fa';
 
 const Header = () => {
@@ -38,7 +38,7 @@ const Header = () => {
   const navItems = [
     { path: "/user/dashboard", icon: <FiHome />, label: "Home" },
     { path: "/user/blogs", icon: <FiBook />, label: "Blog" },
-    { path: "/about", icon: <FaBrain />, label: "Resources" },
+    { path: "/user/webinfopage", icon: <FiInfo />, label: "About Us" },
     { path: "/contact", icon: <FiUser />, label: "Contact" },
   ];
 

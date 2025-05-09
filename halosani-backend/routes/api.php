@@ -40,7 +40,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/web-info', [WebInfoController::class, 'index']);
     Route::post('/web-info', [WebInfoController::class, 'store']);
     Route::get('/web-info/{id}', [WebInfoController::class, 'show']);
-    Route::post('/web-info/{id}', [WebInfoController::class, 'update']);
+    Route::put('/web-info/{id}', [WebInfoController::class, 'update']);
     Route::delete('/web-info/{id}', [WebInfoController::class, 'destroy']);
 });
 

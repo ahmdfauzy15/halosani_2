@@ -18,7 +18,7 @@ const UserNavbar = () => {
     <nav className="user-navbar">
       <div className="navbar-brand">
         <span className="halo">Halo</span>
-        <span className="sani">sani</span>
+        <span className="sani">Sani</span>
       </div>
       
       <div className="nav-items">

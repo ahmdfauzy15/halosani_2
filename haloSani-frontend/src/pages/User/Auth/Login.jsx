@@ -39,7 +39,7 @@ const Login = () => {
       }
 
       // Save token and redirect to dashboard
-      localStorage.setItem('user_token', response.data.token);
+      localStorage.setItem('token', response.data.token);
       navigate('/user/dashboard');
       toast.success('Login successful');
     } catch (error) {

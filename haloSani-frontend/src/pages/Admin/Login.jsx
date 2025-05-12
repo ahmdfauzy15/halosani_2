@@ -185,7 +185,7 @@ const AdminLogin = () => {
 
           {/* Footer */}
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>© {new Date().getFullYear()} Your Company. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} HaloSani Web App. All rights reserved.</p>
           </div>
         </div>
       </div>

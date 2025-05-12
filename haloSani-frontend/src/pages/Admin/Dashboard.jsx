@@ -4,7 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebar';
 import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
-import { FiBook, FiCalendar, FiUsers, FiMessageSquare, FiEdit, FiRefreshCw, FiPlus, FiBarChart2 } from 'react-icons/fi';
+import { 
+  FiBook, 
+  FiCalendar, 
+  FiUsers, 
+  FiRefreshCw, 
+  FiPlus, 
+  FiBarChart2,
+  FiEdit,
+  FiTrendingUp
+} from 'react-icons/fi';
+import { format } from 'date-fns';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -12,7 +22,6 @@ const AdminDashboard = () => {
     blogs: 0,
     events: 0,
     users: 0,
-    feedbacks: 0,
     updatedBlogs: 0
   });
   const [recentBlogs, setRecentBlogs] = useState([]);
@@ -23,15 +32,15 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsRes, blogsRes, updatedBlogsRes] = await Promise.all([
-          api.get('/admin/stats'),
-          api.get('/admin/blogs?limit=4'),
-          api.get('/admin/blogs/updated?limit=4')
-        ]);
-        
-        setStats(statsRes.data);
-        setRecentBlogs(blogsRes.data);
-        setUpdatedBlogs(updatedBlogsRes.data);
+        const response = await api.get('/admin/dashboard/stats');
+        setStats({
+          blogs: response.data.blogs,
+          events: response.data.events,
+          users: response.data.users,
+          updatedBlogs: response.data.updatedBlogs
+        });
+        setRecentBlogs(response.data.recentBlogs);
+        setUpdatedBlogs(response.data.updatedBlogsList);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -54,56 +63,49 @@ const AdminDashboard = () => {
 
   const statCards = [
     { 
-      title: "Total Blogs", 
+      title: "Total Articles", 
       value: stats.blogs, 
-      icon: <FiBook className="text-blue-500" />,
-      color: "bg-blue-100",
-      textColor: "text-blue-600"
+      icon: <FiBook className="text-indigo-500 text-xl" />,
+      color: "bg-indigo-50",
+      trend: stats.blogs > 0 ? 'up' : 'neutral'
     },
     { 
-      title: "Updated Blogs", 
+      title: "Updated Articles", 
       value: stats.updatedBlogs, 
-      icon: <FiRefreshCw className="text-orange-500" />,
-      color: "bg-orange-100",
-      textColor: "text-orange-600"
+      icon: <FiRefreshCw className="text-blue-500 text-xl" />,
+      color: "bg-blue-50",
+      trend: stats.updatedBlogs > 0 ? 'up' : 'neutral'
     },
     { 
       title: "Total Events", 
       value: stats.events, 
-      icon: <FiCalendar className="text-green-500" />,
-      color: "bg-green-100",
-      textColor: "text-green-600"
+      icon: <FiCalendar className="text-emerald-500 text-xl" />,
+      color: "bg-emerald-50",
+      trend: stats.events > 0 ? 'up' : 'neutral'
     },
     { 
-      title: "Total Users", 
+      title: "Registered Users", 
       value: stats.users, 
-      icon: <FiUsers className="text-purple-500" />,
-      color: "bg-purple-100",
-      textColor: "text-purple-600"
-    },
-    { 
-      title: "Feedbacks", 
-      value: stats.feedbacks, 
-      icon: <FiMessageSquare className="text-yellow-500" />,
-      color: "bg-yellow-100",
-      textColor: "text-yellow-600"
+      icon: <FiUsers className="text-purple-500 text-xl" />,
+      color: "bg-purple-50",
+      trend: stats.users > 0 ? 'up' : 'neutral'
     }
   ];
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"
+          className="rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"
         />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Desktop Sidebar */}
       <Sidebar onLogout={handleLogout} activeTab={activeTab} setActiveTab={setActiveTab} />
       
@@ -121,63 +123,71 @@ const AdminDashboard = () => {
             className="flex justify-between items-center mb-8"
           >
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Mental Health CMS Dashboard</h1>
-              <p className="text-gray-600">Manage educational content and community engagement</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Dashboard Overview</h1>
+              <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your content.</p>
             </div>
-            <motion.div 
+            <motion.button 
               whileHover={{ scale: 1.05 }}
-              className="bg-white px-4 py-2 rounded-full shadow-sm flex items-center"
+              whileTap={{ scale: 0.95 }}
+              className="hidden md:flex items-center px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 text-sm font-medium"
             >
-              <div className="h-3 w-3 rounded-full bg-green-400 mr-2"></div>
-              <span className="text-sm font-medium">Admin</span>
-            </motion.div>
+              <span className="h-2 w-2 rounded-full bg-green-400 mr-2"></span>
+              <span>Admin</span>
+            </motion.button>
           </motion.div>
 
           {/* Stats Cards */}
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ staggerChildren: 0.1 }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             {statCards.map((card, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className={`bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all ${card.color} bg-opacity-30 backdrop-blur-sm`}
+                whileHover={{ y: -3 }}
+                className={`${card.color} p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all`}
               >
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-white shadow-sm mr-4">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">{card.title}</p>
+                    <h3 className="text-2xl font-bold text-gray-800 mt-1">{card.value}</h3>
+                  </div>
+                  <div className={`h-12 w-12 rounded-lg ${card.color} flex items-center justify-center`}>
                     {card.icon}
                   </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">{card.title}</p>
-                    <h3 className={`text-2xl font-bold ${card.textColor}`}>{card.value}</h3>
-                  </div>
+                </div>
+                <div className="mt-4 flex items-center">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    card.trend === 'up' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {card.trend === 'up' ? (
+                      <>
+                        <FiTrendingUp className="mr-1" />
+                        Active
+                      </>
+                    ) : 'No activity'}
+                  </span>
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
 
           {/* Content Sections */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Recent Blog Posts */}
+            {/* Recent Articles */}
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-sm overflow-hidden"
+              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
             >
-              <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-50 to-purple-50">
-                <h2 className="text-xl font-semibold text-gray-800">Recent Articles</h2>
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-gray-800">Recent Articles</h2>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate('/admin/blogs')}
-                  className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                  className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center"
                 >
                   View All <FiPlus className="ml-1" />
                 </motion.button>
@@ -191,8 +201,8 @@ const AdminDashboard = () => {
                     exit={{ opacity: 0 }}
                     className="p-6 text-center"
                   >
-                    <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-                      <FiBook className="text-blue-400 text-2xl" />
+                    <div className="mx-auto w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
+                      <FiBook className="text-indigo-400 text-2xl" />
                     </div>
                     <h3 className="mt-2 text-lg font-medium text-gray-900">No articles yet</h3>
                     <p className="mt-1 text-gray-500">Create your first mental health article</p>
@@ -200,13 +210,13 @@ const AdminDashboard = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => navigate('/admin/blogs/create')}
-                      className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                      className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition"
                     >
                       Create Article
                     </motion.button>
                   </motion.div>
                 ) : (
-                  <ul className="divide-y divide-gray-100">
+                  <ul className="divide-y divide-gray-200">
                     {recentBlogs.map((blog) => (
                       <motion.li 
                         key={blog.id}
@@ -216,25 +226,29 @@ const AdminDashboard = () => {
                         whileHover={{ backgroundColor: 'rgba(249, 250, 251, 1)' }}
                         className="transition-colors"
                       >
-                        <div className="px-6 py-4 flex flex-col md:flex-row">
-                          <div className="flex-1">
-                            <div className="flex items-center">
-                              <h3 className="text-lg font-medium text-gray-900">{blog.title}</h3>
-                              <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Published
-                              </span>
+                        <div className="px-5 py-4 flex items-start">
+                          {blog.image && (
+                            <div className="flex-shrink-0 h-16 w-16 rounded-md overflow-hidden mr-4">
+                              <img 
+                                src={blog.image_url} 
+                                alt={blog.title}
+                                className="h-full w-full object-cover"
+                              />
                             </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-base font-medium text-gray-900 truncate">{blog.title}</h3>
                             <p className="mt-1 text-sm text-gray-600 line-clamp-2">{blog.description}</p>
-                          </div>
-                          <div className="mt-4 md:mt-0 md:ml-4 flex space-x-3">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => navigate(`/admin/blogs/${blog.id}/edit`)}
-                              className="inline-flex items-center px-3 py-1.5 border border-gray-200 shadow-sm text-sm leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50"
-                            >
-                              <FiEdit className="mr-1" /> Edit
-                            </motion.button>
+                            <div className="mt-2 flex justify-end">
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => navigate(`/admin/blogs/${blog.id}/edit`)}
+                                className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                              >
+                                <FiEdit className="mr-1" /> Edit
+                              </motion.button>
+                            </div>
                           </div>
                         </div>
                       </motion.li>
@@ -249,10 +263,10 @@ const AdminDashboard = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-sm overflow-hidden"
+              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
             >
-              <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-purple-50 to-blue-50">
-                <h2 className="text-xl font-semibold text-gray-800">Recently Updated</h2>
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-gray-800">Recently Updated</h2>
                 <span className="text-sm text-gray-500">{updatedBlogs.length} updated</span>
               </div>
               
@@ -264,14 +278,14 @@ const AdminDashboard = () => {
                     exit={{ opacity: 0 }}
                     className="p-6 text-center"
                   >
-                    <div className="mx-auto w-16 h-16 rounded-full bg-purple-50 flex items-center justify-center mb-4">
-                      <FiRefreshCw className="text-purple-400 text-2xl" />
+                    <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
+                      <FiRefreshCw className="text-blue-400 text-2xl" />
                     </div>
                     <h3 className="mt-2 text-lg font-medium text-gray-900">No updates yet</h3>
-                    <p className="mt-1 text-gray-500">Updated content will appear here</p>
+                    <p className="mt-1 text-gray-500">Updated articles will appear here</p>
                   </motion.div>
                 ) : (
-                  <ul className="divide-y divide-gray-100">
+                  <ul className="divide-y divide-gray-200">
                     {updatedBlogs.map((blog) => (
                       <motion.li 
                         key={blog.id}
@@ -281,31 +295,28 @@ const AdminDashboard = () => {
                         whileHover={{ backgroundColor: 'rgba(249, 250, 251, 1)' }}
                         className="transition-colors"
                       >
-                        <div className="px-6 py-4">
-                          <div className="flex items-center">
-                            <h3 className="text-lg font-medium text-gray-900">{blog.title}</h3>
-                            <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <div className="px-5 py-4">
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-base font-medium text-gray-900">{blog.title}</h3>
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                               Updated
                             </span>
                           </div>
                           <p className="mt-1 text-sm text-gray-600">
-                            Last updated: {new Date(blog.updated_at).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
+                            Last updated: {format(new Date(blog.updated_at), 'MMM d, yyyy h:mm a')}
                           </p>
-                          <div className="mt-3 flex justify-end">
-                            <motion.button
+                          <div className="mt-3 flex justify-between items-center">
+                            <span className="text-xs text-gray-500">
+                              Created: {format(new Date(blog.created_at), 'MMM d, yyyy')}
+                            </span>
+                            {/* <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => navigate(`/admin/blogs/${blog.id}`)}
                               className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
                             >
                               View Changes <FiPlus className="ml-1" />
-                            </motion.button>
+                            </motion.button> */}
                           </div>
                         </div>
                       </motion.li>
@@ -318,71 +329,71 @@ const AdminDashboard = () => {
 
           {/* Quick Actions */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
             <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all"
+              whileHover={{ y: -3 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all"
             >
               <div className="flex items-center mb-4">
-                <div className="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                <div className="p-2 rounded-lg bg-indigo-100 text-indigo-600 mr-3">
                   <FiEdit className="text-lg" />
                 </div>
-                <h3 className="text-lg font-medium">Create New Article</h3>
+                <h3 className="text-base font-medium">Create New Article</h3>
               </div>
-              <p className="text-gray-600 mb-4">Share mental health knowledge with your community.</p>
+              <p className="text-sm text-gray-600 mb-4">Share mental health knowledge with your community.</p>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/admin/blogs/create')}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                onClick={() => navigate('/admin/blogs')}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition text-sm"
               >
                 Write Article
               </motion.button>
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all"
+              whileHover={{ y: -3 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all"
             >
               <div className="flex items-center mb-4">
-                <div className="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 mr-3">
                   <FiCalendar className="text-lg" />
                 </div>
-                <h3 className="text-lg font-medium">Add Wellness Event</h3>
+                <h3 className="text-base font-medium">Add Wellness Event</h3>
               </div>
-              <p className="text-gray-600 mb-4">Organize mental health workshops or webinars.</p>
+              <p className="text-sm text-gray-600 mb-4">Organize mental health workshops or webinars.</p>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/admin/events/create')}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                onClick={() => navigate('/admin/events')}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition text-sm"
               >
                 Schedule Event
               </motion.button>
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all"
+              whileHover={{ y: -3 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all"
             >
               <div className="flex items-center mb-4">
-                <div className="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                <div className="p-2 rounded-lg bg-purple-100 text-purple-600 mr-3">
                   <FiBarChart2 className="text-lg" />
                 </div>
-                <h3 className="text-lg font-medium">View Insights</h3>
+                <h3 className="text-base font-medium">Make Web Info</h3>
               </div>
-              <p className="text-gray-600 mb-4">Analyze engagement with your mental health content.</p>
+              <p className="text-sm text-gray-600 mb-4">Make knowledge with your mental health content.</p>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/admin/analytics')}
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                onClick={() => navigate('/admin/webinfo')}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition text-sm"
               >
-                See Analytics
+                See Web Info
               </motion.button>
             </motion.div>
           </motion.div>

@@ -11,6 +11,8 @@ import EditBlogPage from './pages/Admin/EditBlogPage';
 import EventCMS from './pages/Admin/EventCMS';
 import EbookCMS from './pages/Admin/EbookCMS';
 import WebInfo from './pages/Admin/WebInfo';
+import VideoAdmin from './pages/Admin/VideoAdmin';
+import NotificationManagement from './pages/Admin/NotificationManagement';
 import UserProtectedRoute from './components/UserProtectedRoute';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import LandingPage from './pages/LandingPage';
@@ -18,6 +20,12 @@ import NotFoundPage from './pages/NotFoundPage';
 import Blog from './pages/User/Blog';
 import BlogDetail from './pages/User/BlogDetail';
 import WebInfoPage from './pages/User/WebInfoPage';
+import Video from './pages/User/Video';
+import VideoDetail from './pages/User/VideoDetail';
+import Ebook from './pages/User/Ebook';
+import Freq from './pages/User/Freq';
+import OurTeam from './pages/User/OurTeam';
+
 
 
 const App = () => {
@@ -41,6 +49,9 @@ const App = () => {
           <Route path="/admin/event-cms" element={<EventCMS />} />
           <Route path="/admin/ebook" element={<EbookCMS />} />
           <Route path="/admin/webinfo" element={<WebInfo />} />
+          <Route path="/admin/video" element={<VideoAdmin />} />
+          <Route path="/admin/notifications" element={<NotificationManagement />} />
+
         </Route>
 
         {/* Protected User Routes with Header + Footer */}
@@ -49,6 +60,12 @@ const App = () => {
           <Route path="/user/blogs" element={<Blog />} />
           <Route path="/user/blogs/:id" element={<BlogDetail />} />
           <Route path="/user/webinfopage" element={<WebInfoPage />} />
+          <Route path="/user/videos" element={<Video />} />
+          <Route path="/user/videos/:id" element={<VideoDetail />} />
+          <Route path="/user/ebooks" element={<Ebook />} />
+          <Route path="/user/f&q" element={<Freq />} />
+          <Route path="/user/team" element={<OurTeam />} />
+
 
         </Route>
 

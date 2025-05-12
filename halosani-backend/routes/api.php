@@ -59,12 +59,13 @@ Route::prefix('admin')->group(function () {
 
 // Admin Video Routes
 use App\Http\Controllers\Admin\VideoController;
+
 Route::prefix('admin')->group(function () {
     Route::get('/videos', [VideoController::class, 'index']);
     Route::post('/videos', [VideoController::class, 'store']);
-    Route::get('/videos/{id}', [VideoController::class, 'show']);
-    Route::post('/videos/{id}', [VideoController::class, 'update']);
-    Route::delete('/videos/{id}', [VideoController::class, 'destroy']);
+    Route::get('/videos/{video}', [VideoController::class, 'show']);
+    Route::put('/videos/{video}', [VideoController::class, 'update']); 
+    Route::delete('/videos/{video}', [VideoController::class, 'destroy']);
 });
 
 // Admin ChatRoom Routes
@@ -91,7 +92,8 @@ Route::prefix('admin')->group(function () {
 // Admin Notification Routes
 use App\Http\Controllers\Admin\NotificationController;
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
-    Route::post('/send-notification', [NotificationController::class, 'sendNotificationToUsers']);
+    Route::post('/send-notification', [NotificationController::class, 'sendNotification']);
+    Route::get('/users', [NotificationController::class, 'getUsers']);
 });
 
 // Admin Admin Management Routes
@@ -112,12 +114,19 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
 });
 
+// In your api.php
+use App\Http\Controllers\Admin\DashboardController;
+Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+});
+
 use App\Http\Controllers\Admin\UserLoginLogController;
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     // Route untuk mengambil data aktivitas login user per bulan
     Route::get('/user-login-logs', [UserLoginLogController::class, 'index']);
 });
+
 
 
 
@@ -139,13 +148,16 @@ use App\Http\Controllers\User\EbookController as UserEbookController;
 use App\Http\Controllers\User\WebInfoController as UserWebInfoController;
 use App\Http\Controllers\User\FeedbackController as UserFeedbackController;
 use App\Http\Controllers\User\ChatRoomController as UserChatRoomController ;
+use App\Http\Controllers\User\DashboardController as Dashuser;
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Events created by Admin
-    Route::get('/events', [UserEventController::class, 'index']);
-    Route::get('/events/{id}', [UserEventController::class, 'show']);
+    Route::get('/dashboard/user', [Dashuser::class, 'getUserData']);
+    
+    // Events
+    Route::get('/events', [UserEventController::class, 'getEvents']);
 
     // Blogs created by Admin
     Route::get('/blogs', [UserBlogController::class, 'index']);

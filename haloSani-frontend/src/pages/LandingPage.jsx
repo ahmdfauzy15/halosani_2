@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { FiMenu, FiX } from 'react-icons/fi';
 import './LandingPage.css';
 import halosanilan from '../assets/halosani_lan.png';
 
@@ -9,12 +10,17 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const controls = useAnimation();
   const [ref, inView] = useInView();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (inView) {
       controls.start('visible');
     }
   }, [controls, inView]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,13 +53,28 @@ const LandingPage = () => {
     }
   };
 
+  const navItems = [
+    { 
+      label: 'Features', 
+      action: () => document.getElementById('features').scrollIntoView({ behavior: 'smooth' }) 
+    },
+    { 
+      label: 'Stories', 
+      action: () => document.getElementById('testimonials').scrollIntoView({ behavior: 'smooth' }) 
+    },
+    { 
+      label: 'Login', 
+      action: () => navigate('/user/login') 
+    }
+  ];
+
   return (
     <div className="halosani-landing">
       {/* Gradient Background */}
       <div className="gradient-bg"></div>
       
       {/* Floating Particles */}
-      <div className="particles">
+        <div className="particles">
         {[...Array(15)].map((_, i) => (
           <div key={i} className="particle" style={{
             left: `${Math.random() * 100}%`,
@@ -65,8 +86,53 @@ const LandingPage = () => {
         ))}
       </div>
 
+       {/* Mobile Navigation */}
+      <nav className="mobile-navbar">
+        <motion.div 
+          className="navbar-brand"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <span className="halo">Halo</span>
+          <span className="sani">sani</span>
+        </motion.div>
+        
+        <button className="menu-toggle" onClick={toggleMenu}>
+          {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </button>
+      </nav>
+
+      
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <motion.div 
+          className="mobile-menu"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="menu-items">
+            {navItems.map((item, index) => (
+              <motion.button
+                key={index}
+                className="menu-item"
+                onClick={() => {
+                  item.action();
+                  setIsMenuOpen(false);
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.label}
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Navigation */}
-      <nav className="landing-nav">
+        <nav className="landing-nav">
         <motion.div 
           className="logo"
           initial={{ opacity: 0, y: -20 }}
@@ -119,8 +185,7 @@ const LandingPage = () => {
               Starts Here
             </h1>
             <p className="hero-description">
-              Halosani combines evidence-based therapy techniques with personalized 
-              support to help you build resilience and emotional balance.
+              Di dunia yang serba cepat saat ini, kesehatan mental telah menjadi aspek penting dari kesejahteraan keseluruhan. HaloSani memahami tantangan yang dihadapi individu dalam mengelola kesehatan mental, dan kami hadir untuk menyediakan lingkungan yang suportif dan mudah diakses. Baik Anda berurusan dengan stres, kecemasan, depresi, atau masalah kesehatan mental lainnya,HaloSani adalah teman terpercaya untuk temani anda dalam edukasi kesehatan mental dan dalam perjalanan menuju kesehatan mental yang lebih baik.
             </p>
             <div className="hero-buttons">
               <motion.button
@@ -131,13 +196,13 @@ const LandingPage = () => {
               >
                 Begin Your Journey
               </motion.button>
-              <motion.button
+              {/* <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="secondary-btn"
               >
                 How It Works
-              </motion.button>
+              </motion.button> */}
             </div>
           </motion.div>
           <motion.div 
@@ -211,15 +276,15 @@ const LandingPage = () => {
             className="stat-card"
             whileHover={{ y: -5 }}
           >
-            <h3 className="stat-number">10k+</h3>
-            <p className="stat-label">Active Users</p>
+            <h3 className="stat-number">100%</h3>
+            <p className="stat-label">Terbuka Untuk Umum</p>
           </motion.div>
           <motion.div 
             className="stat-card"
             whileHover={{ y: -5 }}
           >
-            <h3 className="stat-number">98%</h3>
-            <p className="stat-label">Report Reduced Anxiety</p>
+            <h3 className="stat-number">100%</h3>
+            <p className="stat-label">Menenmani Anda</p>
           </motion.div>
           <motion.div 
             className="stat-card"
@@ -240,8 +305,8 @@ const LandingPage = () => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2>Your Mental Health Toolkit</h2>
-          <p>Comprehensive features designed to support your wellness journey</p>
+          <h2>Teman Edukasi Kesehatan Mental Anda</h2>
+          <p>Fitur-fitur komprehensif yang dirancang untuk mendukung perjalanan kesehatan Anda</p>
         </motion.div>
 
         <div className="features-grid">
@@ -273,7 +338,7 @@ const LandingPage = () => {
           viewport={{ once: true }}
         >
           <h2>Real Stories, Real Healing</h2>
-          <p>Hear from people who transformed their mental health with Halosani</p>
+          <p>Dengarkan cerita dari orang-orang yang telah mengubah kesehatan mental mereka dengan HaloSani</p>
         </motion.div>
 
         <div className="testimonials-container">
@@ -310,8 +375,8 @@ const LandingPage = () => {
         viewport={{ once: true }}
       >
         <div className="cta-container">
-          <h2>Ready to prioritize your mental health?</h2>
-          <p>Join thousands who have found balance with Halosani</p>
+          <h2>Siap memprioritaskan kesehatan mental Anda?</h2>
+          <p>Bergabunglah dengan kami dan orang yang telah menemukan keseimbangan dengan HaloSani</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -331,7 +396,6 @@ const LandingPage = () => {
             <span className="sani">sani</span>
           </div>
           <div className="footer-links">
-            <a href="#">About</a>
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
             <a href="/admin/login">Admin</a>
@@ -355,54 +419,54 @@ const LandingPage = () => {
 const features = [
   {
     icon: '🧠',
-    title: 'Personalized Therapy',
-    description: 'AI-powered recommendations based on your unique needs and progress'
+    title: 'Mentor AI',
+    description: 'Menggunakan teknologi Large Language Model (LLM) dan RAG untuk memberikan dukungan, wawasan, dan saran terkait kesehatan mental.'
   },
   {
-    icon: '📊',
-    title: 'Mood Tracking',
-    description: 'Visualize your emotional patterns and identify triggers'
+    icon: '📘',
+    title: 'Blog Kesehatan Mental',
+    description: 'Fitur Blog dalam aplikasi HaloSani dirancang untuk memberikan akses kepada pengguna ke berbagai informasi berkualitas yang relevan dengan kesehatan mental.'
   },
   {
-    icon: '🎧',
-    title: 'Guided Meditations',
-    description: '100+ sessions for stress, sleep, anxiety and more'
+    icon: '🎥',
+    title: 'Video Kesehatan Mental',
+    description: 'Kumpulan sesi untuk video terkait kesehatan mental, tidur, kecemasan, dan lainnya'
   },
   {
     icon: '👥',
-    title: 'Community Support',
-    description: 'Connect with others in safe, moderated groups'
+    title: 'Chat Community',
+    description: 'Chat Community dalam aplikasi HaloSani dirancang untuk menciptakan ruang interaksi yang inklusif dan mendukung'
   },
   {
     icon: '📝',
-    title: 'Journal Prompts',
-    description: 'Structured writing exercises for self-reflection'
+    title: 'E-book',
+    description: 'Fitur ini memungkinkan pengguna untuk memperluas wawasan mereka, mendukung penelitian, dan meningkatkan pemahaman mereka tentang berbagai topik kesehatan mental.'
   },
   {
     icon: '🎯',
-    title: 'Goal Setting',
-    description: 'Build healthy habits with achievable milestones'
+    title: 'Event',
+    description: 'Fitur Event dalam aplikasi HaloSani dirancang untuk mempermudah pengguna mengetahui dan mengikuti berbagai acara yang berkaitan dengan kesehatan mental.'
   }
 ];
 
 // Data for testimonials
 const testimonials = [
   {
-    quote: "Halosani helped me manage my anxiety in ways I never thought possible. The guided sessions are life-changing.",
+    quote: "Halosani membantu saya mengelola kecemasan saya dengan cara yang tidak pernah saya duga sebelumnya. Sesi yang dipandu sangat mengubah hidup saya.",
     avatar: "👩",
-    name: "Sarah K.",
-    role: "Teacher, 32"
+    name: "Harmoni",
+    role: "Student, 22"
   },
   {
-    quote: "After trying many apps, Halosani is the only one that actually helped me develop long-term coping strategies.",
+    quote: "Halosani adalah satu-satunya aplikasi yang benar-benar membantu saya mengembangkan strategi penanganan jangka panjang.",
     avatar: "👨",
-    name: "Michael T.",
-    role: "Software Engineer, 28"
+    name: "Ahmad",
+    role: "Student, 21"
   },
   {
-    quote: "The community support makes me feel less alone. I've made real friends through this journey.",
+    quote: "Dukungan komunitas membuat saya merasa tidak sendirian. Saya telah mendapatkan teman sejati melalui perjalanan ini.",
     avatar: "🧑",
-    name: "Alex J.",
+    name: "Gagah.",
     role: "Student, 21"
   }
 ];

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiHome, FiBook, FiUser, FiLogIn, FiLogOut,FiInfo } from 'react-icons/fi';
+import { FiHome, FiBook, FiUser, FiLogIn, FiLogOut,FiInfo,FiVideo ,FiBookOpen,FiKey} from 'react-icons/fi';
 import { FaBrain } from 'react-icons/fa';
 
 const Header = () => {
@@ -39,7 +39,10 @@ const Header = () => {
     { path: "/user/dashboard", icon: <FiHome />, label: "Home" },
     { path: "/user/blogs", icon: <FiBook />, label: "Blog" },
     { path: "/user/webinfopage", icon: <FiInfo />, label: "About Us" },
-    { path: "/contact", icon: <FiUser />, label: "Contact" },
+    { path: "/user/videos", icon: <FiVideo />, label: "Video" },
+    { path: "/user/ebooks", icon: <FiBookOpen />, label: "Ebooks" },
+    { path: "/user/f&q", icon: <FiKey />, label: "FAQ" },
+
   ];
 
   // Animation variants
@@ -66,10 +69,10 @@ const Header = () => {
         <div className="flex justify-between items-center">
           {/* Logo with animation */}
           <motion.div whileHover={{ scale: 1.05 }}>
-            <Link to="/" className="flex items-center">
+            <Link to="user/dashboard" className="flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 <span className="halo">Halo</span>
-                <span className="sani">sani</span>
+                <span className="sani">Sani</span>
               </span>
             </Link>
           </motion.div>

@@ -34,6 +34,13 @@ const Blog = () => {
     (selectedCategory === 'All' || blog.category === selectedCategory)
   );
 
+  // Function to clean up description text
+  const cleanDescription = (text) => {
+    if (!text) return '';
+    // Replace multiple spaces with single space and trim
+    return text.replace(/\s+/g, ' ').trim();
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-1">
@@ -74,7 +81,7 @@ const Blog = () => {
             <div className="relative mb-6">
               <input
                 type="text"
-                placeholder="Search articles..."
+                placeholder="Search Topic"
                 className="w-full px-5 py-3 pl-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -135,8 +142,8 @@ const Blog = () => {
                       </span>
                     )}
                     <h2 className="text-xl font-bold text-gray-800 mb-2">{blog.title}</h2>
-                    <p className="text-gray-600 mb-4 line-clamp-3">
-                      {blog.description}
+                    <p className="text-gray-600 mb-4 line-clamp-3 whitespace-normal">
+                      {cleanDescription(blog.description)}
                     </p>
                     <div className="flex items-center text-sm text-gray-500">
                       <FiClock className="mr-1" />
@@ -155,35 +162,7 @@ const Blog = () => {
             </div>
           )}
         </motion.div>
-
-        {/* Newsletter */}
-        {/* <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="bg-gray-100 py-16"
-        >
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Get Mental Health Tips Directly to Your Inbox
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Subscribe to our newsletter for weekly wellness insights
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 justify-center max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </motion.section> */}
       </main>
-
     </div>
   );
 };

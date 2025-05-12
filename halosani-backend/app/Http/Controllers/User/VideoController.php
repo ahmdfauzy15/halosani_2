@@ -11,8 +11,13 @@ class VideoController extends Controller
     // Menampilkan daftar video
     public function index()
     {
-        $videos = Video::all();  // Ambil semua video
-        return response()->json($videos);
+        
+         try {
+        $videos = Video::latest()->get();
+        return response()->json($videos ?: []); // Ensure always returns array
+    } catch (\Exception $e) {
+        return response()->json([], 500); // Return empty array on error
+    }
     }
 
     // Menampilkan detail video

@@ -346,7 +346,7 @@ const WebInfoPage = () => {
               {
                 icon: <FiPhone className="text-green-600 text-2xl" />,
                 title: "Phone",
-                content: webInfo.contact || '+1 (123) 456-7890',
+                content: '(+62)85893191943',
                 color: "bg-green-100"
               },
               {
@@ -441,20 +441,7 @@ const WebInfoPage = () => {
         </div>
       </motion.section>
 
-      {/* Floating back to top button */}
-      {/* <motion.button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-xl z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.2 }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-      </motion.button> */}
+      
     </div>
   );
 };

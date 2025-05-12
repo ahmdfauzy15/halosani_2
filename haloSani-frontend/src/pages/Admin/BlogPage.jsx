@@ -110,13 +110,12 @@ const BlogPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Desktop Sidebar */}
-      <Sidebar onLogout={handleLogout} active="blogs" />
-      
-      {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle onLogout={handleLogout} />
-
+    <div className="flex bg-gray-50 min-h-screen">
+    {/* Desktop Sidebar */}
+    <Sidebar onLogout={handleLogout} />
+    
+    {/* Mobile Sidebar Toggle */}
+    <MobileSidebarToggle onLogout={handleLogout} />
       {/* Main Content Area */}
       <div className="flex-1 md:ml-20 lg:ml-64 flex flex-col min-h-screen">
         {/* Scrollable Content Area */}

@@ -16,4 +16,14 @@ class EventCarousel extends Model
         'description',
         'event_date',
     ];
+
+    protected $casts = [
+        'event_date' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    protected $dates = [
+        'event_date',
+        'created_at',
+        'updated_at',
+    ];
 }

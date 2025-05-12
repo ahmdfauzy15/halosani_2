@@ -76,29 +76,22 @@ const Footer = () => {
 
   const footerLinks = [
     {
-      title: 'Company',
+      title: 'Developer Team',
       links: [
-        { name: 'About Us', url: '/about' },
-        { name: 'Our Team', url: '/team' },
-        { name: 'Careers', url: '/careers' }
+        { name: 'About Us', url: 'user/webinfopage' },
+        { name: 'Our Team', url: 'user/team' },
       ]
     },
     {
       title: 'Resources',
       links: [
-        { name: 'Blog', url: '/blog' },
-        { name: 'Guides', url: '/guides' },
-        { name: 'FAQ', url: '/faq' }
-      ]
-    },
-    {
-      title: 'Legal',
-      links: [
-        { name: 'Privacy Policy', url: '/privacy' },
-        { name: 'Terms of Service', url: '/terms' },
-        { name: 'Cookie Policy', url: '/cookies' }
+        { name: 'Blog', url: 'user/blogs' },
+        { name: 'Ebook', url: 'user/ebooks' },
+        { name: 'Video', url: 'user/videos' },
+        { name: 'FAQ', url: 'user/f&q' }
       ]
     }
+   
   ];
 
   return (

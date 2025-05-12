@@ -313,7 +313,7 @@ const BlogDetail = () => {
         )}
 
         {/* Newsletter Subscription */}
-        <motion.section
+        {/* <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -335,7 +335,7 @@ const BlogDetail = () => {
               </button>
             </div>
           </div>
-        </motion.section>
+        </motion.section> */}
       </main>
     </div>
   );

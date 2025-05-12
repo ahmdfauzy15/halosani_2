@@ -166,33 +166,34 @@ class AuthController extends Controller
     }
 
     // Login User
-    public function login(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+    // In your AuthController.php
+public function login(Request $request)
+{
+    $validated = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
 
-        $user = User::where('email', $validated['email'])->first();
+    $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-
-        if (!$user->is_verified) {
-            return response()->json([
-                'message' => 'Account not verified',
-                'user_id' => $user->id
-            ], 403);
-        }
-
-        $token = $user->createToken('UserToken')->plainTextToken;
-
-        return response()->json([
-            'token' => $token,
-            'user' => $user->only(['id', 'name', 'email'])
-        ], 200);
+    if (!$user || !Hash::check($validated['password'], $user->password)) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
+
+    if (!$user->is_verified) {
+        return response()->json([
+            'message' => 'Account not verified',
+            'user_id' => $user->id
+        ], 403);
+    }
+
+    $token = $user->createToken('UserToken')->plainTextToken;
+
+    return response()->json([
+        'token' => $token,
+        'user' => $user->only(['id', 'name', 'email', 'gender', 'age', 'address'])
+    ], 200);
+}
 
     // Logout User
     public function logout(Request $request)

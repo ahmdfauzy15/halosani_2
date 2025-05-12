@@ -32,7 +32,7 @@ const UserHome = () => {
 useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
+      const token = localStorage.getItem('user_token');
         if (!token) {
           throw new Error('No authentication token found');
         }

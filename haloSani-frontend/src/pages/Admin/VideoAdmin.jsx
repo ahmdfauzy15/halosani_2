@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 import api from '../../api/axios';
 import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiClock, FiYoutube, FiFilter } from 'react-icons/fi';
 import { FaYoutube } from 'react-icons/fa';
@@ -132,10 +132,10 @@ const VideoAdmin = () => {
       </div>
       
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle 
+      {/* <MobileSidebarToggle 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         isOpen={isSidebarOpen}
-      />
+      /> */}
       
       {/* Mobile Sidebar - conditionally shown */}
       {isSidebarOpen && (

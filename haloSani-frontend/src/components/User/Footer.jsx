@@ -80,6 +80,8 @@ const Footer = () => {
       links: [
         { name: 'About Us', url: 'user/webinfopage' },
         { name: 'Our Team', url: 'user/team' },
+        { name: 'Send Feedbacks', url: '/user/feedback' },
+
       ]
     },
     {
@@ -89,6 +91,7 @@ const Footer = () => {
         { name: 'Ebook', url: 'user/ebooks' },
         { name: 'Video', url: 'user/videos' },
         { name: 'FAQ', url: 'user/f&q' }
+
       ]
     }
    
@@ -133,7 +136,7 @@ const Footer = () => {
           >
             <h3 className="text-xl font-bold mb-6 flex items-center">
               <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-                We'd Love Your Feedback
+                Having Problems?
               </span>
             </h3>
             
@@ -144,7 +147,7 @@ const Footer = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Leave Feedback
+                Report Your Problems
               </motion.button>
             ) : (
               <motion.div 

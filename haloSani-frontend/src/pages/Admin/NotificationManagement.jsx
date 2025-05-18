@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 import { toast } from 'react-toastify';
 import { FiSend, FiUsers, FiMail, FiInfo, FiCheck, FiLoader } from 'react-icons/fi';
 
@@ -88,7 +88,7 @@ const NotificationManagement = ({ onLogout }) => {
       <Sidebar onLogout={onLogout} />
       
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle onLogout={onLogout} />
+      {/* <MobileSidebarToggle onLogout={onLogout} /> */}
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden md:ml-72">

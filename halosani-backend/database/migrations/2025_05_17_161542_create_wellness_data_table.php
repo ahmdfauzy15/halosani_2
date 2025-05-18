@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedbacks', function (Blueprint $table) {
+       // database/migrations/xxxx_create_wellness_data_table.php
+        Schema::create('wellness_data', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->text('feedback');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->json('data');
             $table->timestamps();
-    
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('wellness_data');
     }
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -115,7 +115,7 @@ const BlogPage = () => {
     <Sidebar onLogout={handleLogout} />
     
     {/* Mobile Sidebar Toggle */}
-    <MobileSidebarToggle onLogout={handleLogout} />
+    {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
       {/* Main Content Area */}
       <div className="flex-1 md:ml-20 lg:ml-64 flex flex-col min-h-screen">
         {/* Scrollable Content Area */}

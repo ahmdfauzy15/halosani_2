@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 import { 
   FiBook, 
   FiCalendar, 
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
       <Sidebar onLogout={handleLogout} activeTab={activeTab} setActiveTab={setActiveTab} />
       
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle onLogout={handleLogout} />
+      {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
 
       {/* Main Content */}
       <div className="flex-1 md:ml-64 p-6 md:p-8">

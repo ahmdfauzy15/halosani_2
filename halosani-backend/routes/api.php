@@ -107,12 +107,12 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 });
 
 // Admin Feedback Routes
-use App\Http\Controllers\Admin\FeedbackController;
-Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
-    Route::get('/feedbacks', [FeedbackController::class, 'index']);
-    Route::get('/feedbacks/{id}', [FeedbackController::class, 'show']);
-    Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
-});
+// use App\Http\Controllers\Admin\FeedbackController;
+// Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+//     Route::get('/feedbacks', [FeedbackController::class, 'index']);
+//     Route::get('/feedbacks/{id}', [FeedbackController::class, 'show']);
+//     Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
+// });
 
 // In your api.php
 use App\Http\Controllers\Admin\DashboardController;
@@ -128,6 +128,11 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 });
 
 
+use App\Http\Controllers\Admin\FeedbackController;
+
+Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/feedbacks', [FeedbackController::class, 'index']);
+});
 
 
 
@@ -135,10 +140,13 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
 
 // Auth Routes for User
 use App\Http\Controllers\AuthController;
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+// Route::apiResource('/feedback', UserFeedback::class)->only(['index', 'store']);
 
 // User Content Routes (Event, Blog, Video, Ebook, Web Info)
 use App\Http\Controllers\User\EventController as UserEventController;
@@ -146,7 +154,7 @@ use App\Http\Controllers\User\BlogController as UserBlogController;
 use App\Http\Controllers\User\VideoController as UserVideoController;
 use App\Http\Controllers\User\EbookController as UserEbookController;
 use App\Http\Controllers\User\WebInfoController as UserWebInfoController;
-use App\Http\Controllers\User\FeedbackController as UserFeedbackController;
+// use App\Http\Controllers\User\FeedbackController ;
 use App\Http\Controllers\User\ChatRoomController as UserChatRoomController ;
 use App\Http\Controllers\User\DashboardController as Dashuser;
 
@@ -155,7 +163,8 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/dashboard/user', [Dashuser::class, 'getUserData']);
-    
+    Route::get('/dashboard/wellness-data', [Dashuser::class, 'getWellnessData']);
+    Route::post('/dashboard/save-wellness-data', [Dashuser::class, 'saveWellnessData']);
     // Events
     Route::get('/events', [UserEventController::class, 'getEvents']);
 
@@ -176,7 +185,10 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::get('/web-info/{id}', [UserWebInfoController::class, 'show']);
 
     // Feedbacks from User
-    Route::post('/feedbacks', [UserFeedbackController::class, 'store']);
+    // Route::post('/feedbacks', [UserFeedbackController::class, 'store']);
+    //  Route::apiResource('feedback', \App\Http\Controllers\FeedbackController::class)->only(['index', 'store']);
+    Route::get('/feedback', [\App\Http\Controllers\User\FeedbackController::class, 'index']);
+    Route::post('/feedback', [\App\Http\Controllers\User\FeedbackController::class, 'store']);
 
     Route::get('/chat-rooms', [UserChatRoomController::class, 'index']);
     

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FiEdit, FiTrash2, FiUpload, FiSave, FiPlus, FiChevronLeft } from 'react-icons/fi';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 import { useNavigate } from 'react-router-dom';
 
 const WebInfoAdmin = () => {
@@ -13,7 +13,7 @@ const WebInfoAdmin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null); // Added this state
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  // const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [error, setError] = useState(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const navigate = useNavigate();
@@ -151,10 +151,10 @@ const WebInfoAdmin = () => {
       <Sidebar />
       
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle 
+      {/* <MobileSidebarToggle 
         isOpen={mobileSidebarOpen} 
         toggle={() => setMobileSidebarOpen(!mobileSidebarOpen)} 
-      />
+      /> */}
 
       {/* Main Content */}
       <div className="flex-1 md:ml-72 p-4 md:p-8">

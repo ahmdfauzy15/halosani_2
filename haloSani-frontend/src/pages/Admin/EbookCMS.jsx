@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebar';
-import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
+// import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
 
 const EbookCMS = () => {
   const [ebooks, setEbooks] = useState([]);
@@ -185,7 +185,7 @@ const EbookCMS = () => {
       <Sidebar onLogout={handleLogout} />
       
       {/* Mobile Sidebar Toggle */}
-      <MobileSidebarToggle onLogout={handleLogout} />
+      {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
 
       {/* Main Content */}
       <div className="flex-1 md:ml-72 p-4 md:p-8">

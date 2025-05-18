@@ -9,67 +9,93 @@ import api from '../../api/axios';
 import './UserHome.css';
 import CommunityChat from '../../components/User/CommunityChat';
 
-
 const UserHome = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [darkMode, setDarkMode] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentMood, setCurrentMood] = useState(null);
-  const [moodHistory, setMoodHistory] = useState([]);
   const [breathingActive, setBreathingActive] = useState(false);
   const [breathingPhase, setBreathingPhase] = useState('inhale');
-  const [breathingCount, setBreathingCount] = useState(0);
   const [gratitudeList, setGratitudeList] = useState([]);
   const [newGratitudeItem, setNewGratitudeItem] = useState('');
   const [journalEntry, setJournalEntry] = useState('');
-  const [journalEntries, setJournalEntries] = useState([]);
   const [showJournalForm, setShowJournalForm] = useState(false);
   const [events, setEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(false);
 
-  // Fetch user data on component mount
-useEffect(() => {
+  // Load data dari localStorage
+  const loadFromLocalStorage = (key, defaultValue) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+      console.error(`Error loading ${key} from localStorage:`, error);
+      return defaultValue;
+    }
+  };
+
+  // State dengan inisialisasi dari localStorage
+  const [currentMood, setCurrentMood] = useState(() => 
+    loadFromLocalStorage('currentMood', null)
+  );
+  const [moodHistory, setMoodHistory] = useState(() => 
+    loadFromLocalStorage('moodHistory', [])
+  );
+  const [breathingCount, setBreathingCount] = useState(() => 
+    loadFromLocalStorage('breathingCount', 0)
+  );
+  const [journalEntries, setJournalEntries] = useState(() => 
+    loadFromLocalStorage('journalEntries', [])
+  );
+
+  // Simpan ke localStorage setiap kali state berubah
+  useEffect(() => {
+    localStorage.setItem('currentMood', JSON.stringify(currentMood));
+  }, [currentMood]);
+
+  useEffect(() => {
+    localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+  }, [moodHistory]);
+
+  useEffect(() => {
+    localStorage.setItem('breathingCount', JSON.stringify(breathingCount));
+  }, [breathingCount]);
+
+  useEffect(() => {
+    localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+  }, [journalEntries]);
+
+  // Fetch user data dan events dari API
+  useEffect(() => {
     const fetchData = async () => {
       try {
-      const token = localStorage.getItem('user_token');
+        const token = localStorage.getItem('user_token');
         if (!token) {
           throw new Error('No authentication token found');
         }
 
         setEventsLoading(true);
-        console.log('Fetching events...');
         
+        // Fetch events
         const eventsResponse = await api.get('/user/events', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log('Events API response:', eventsResponse.data);
-
-        if (!eventsResponse.data.success) {
-          console.error('Events API returned success=false');
-          setEvents([]);
-          return;
+        if (eventsResponse.data.success) {
+          const eventsData = eventsResponse.data.events || [];
+          const validatedEvents = eventsData
+            .filter(event => event && event.id && event.title)
+            .map(event => ({
+              ...event,
+              event_date: event.event_date || null,
+              image: event.image 
+                ? event.image.startsWith('http') 
+                  ? event.image 
+                  : `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/storage/${event.image}`
+                : null,
+            }));
+          setEvents(validatedEvents);
         }
-
-        const eventsData = eventsResponse.data.events || [];
-        console.log('Processed events data:', eventsData);
-
-        // Transform events data with proper image URLs
-        const validatedEvents = eventsData
-          .filter(event => event && event.id && event.title)
-          .map(event => ({
-            ...event,
-            event_date: event.event_date || null,
-            image: event.image 
-              ? event.image.startsWith('http') 
-                ? event.image 
-                : `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/storage/${event.image}`
-              : null,
-          }));
-
-        console.log('Validated events with image URLs:', validatedEvents);
-        setEvents(validatedEvents);
 
         // Fetch user data
         const userResponse = await api.get('/user/dashboard/user', {
@@ -77,15 +103,7 @@ useEffect(() => {
         });
         
         const user = userResponse.data.user || userResponse.data;
-        if (!user) throw new Error('User data not found');
-        setUserData(user);
-
-        // Initialize sample data
-        setMoodHistory([
-          { mood: 'happy', date: new Date(Date.now() - 86400000) },
-          { mood: 'neutral', date: new Date(Date.now() - 2 * 86400000) },
-          { mood: 'anxious', date: new Date(Date.now() - 3 * 86400000) },
-        ]);
+        if (user) setUserData(user);
 
       } catch (error) {
         console.error('Error in fetchData:', error);
@@ -118,18 +136,38 @@ useEffect(() => {
     return () => clearInterval(timer);
   }, [breathingActive]);
 
+  // Fungsi untuk menghitung statistik mood
+  const getMoodStatistics = () => {
+    const moodCounts = {
+      happy: 0,
+      neutral: 0,
+      sad: 0,
+      anxious: 0,
+      angry: 0
+    };
+
+    moodHistory.forEach(entry => {
+      if (moodCounts.hasOwnProperty(entry.mood)) {
+        moodCounts[entry.mood]++;
+      }
+    });
+
+    return moodCounts;
+  };
+
   const handleMoodSelection = (mood) => {
+    const newMoodEntry = {
+      mood,
+      date: new Date().toISOString()
+    };
+
     setCurrentMood(mood);
-    setMoodHistory(prev => [
-      { mood, date: new Date() },
-      ...prev.slice(0, 4)
-    ]);
+    setMoodHistory(prev => [newMoodEntry, ...prev.slice(0, 29)]); // Simpan maksimal 30 entri
   };
 
   const startBreathingExercise = () => {
     setBreathingActive(true);
     setBreathingPhase('inhale');
-    setBreathingCount(0);
   };
 
   const stopBreathingExercise = () => {
@@ -153,15 +191,13 @@ useEffect(() => {
         content: journalEntry,
         date: new Date().toISOString()
       };
-      setJournalEntries(prev => [newEntry, ...prev]);
+      setJournalEntries(prev => [newEntry, ...prev.slice(0, 49)]); // Simpan maksimal 50 entri
       setJournalEntry('');
       setShowJournalForm(false);
     }
   };
 
-const EventCarousel = () => {
-    console.log('Rendering EventCarousel with events:', events);
-    
+  const EventCarousel = () => {
     if (eventsLoading) {
       return (
         <div className="flex justify-center py-8">
@@ -172,7 +208,6 @@ const EventCarousel = () => {
     }
 
     if (!Array.isArray(events)) {
-      console.error('Events is not an array:', events);
       return (
         <div className="text-center py-8 text-red-500">
           Error: Events data format is invalid
@@ -192,14 +227,11 @@ const EventCarousel = () => {
       <div className="relative overflow-hidden">
         <div className="flex space-x-4 py-4 overflow-x-auto pb-6 snap-x snap-mandatory">
           {events.map((event, index) => {
-            // Construct proper image URL - IMPORTANT CHANGE HERE
             const imageUrl = event.image 
               ? event.image.startsWith('http') 
                 ? event.image 
                 : `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/storage/${event.image}`
               : null;
-
-            console.log(`Event ${index} image URL:`, imageUrl); // Debugging
 
             return (
               <motion.div
@@ -217,10 +249,8 @@ const EventCarousel = () => {
                       alt={event.title}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       onError={(e) => {
-                        console.error('Error loading image:', imageUrl); // Debugging
                         e.target.onerror = null;
                         e.target.src = 'https://via.placeholder.com/300?text=Event+Image';
-                        e.target.className = 'w-full h-full object-contain bg-gray-200 p-4';
                       }}
                     />
                   ) : (
@@ -238,12 +268,12 @@ const EventCarousel = () => {
                   </p>
                   {event.event_date && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      {new Date(event.event_date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
+                      {new Date(event.event_date).toLocaleDateString('id-ID', {
+                         timeZone: 'Asia/Jakarta',
+                          weekday: 'long',    // Senin, Selasa, ...
+                          year: 'numeric',    // 2025
+                          month: 'long',      // Januari, Februari, ...
+                          day: 'numeric',
                       })}
                     </p>
                   )}
@@ -265,32 +295,40 @@ const EventCarousel = () => {
       </div>
     );
   };
- 
 
+  // Stats data dengan informasi dari localStorage
   const stats = [
     { 
       icon: <FiHeart />, 
-      value: `${moodHistory.length} Mood Record`, 
+      value: `${moodHistory.length} Mood Records`, 
       label: 'Mood Tracking', 
-      color: '#ef4444' 
+      color: '#ef4444',
+      description: `Happy: ${getMoodStatistics().happy}, Neutral: ${getMoodStatistics().neutral}, Sad: ${getMoodStatistics().sad}`
     },
     { 
       icon: <FiActivity />, 
-      value: breathingCount > 0 ? `${breathingCount} mins` : 'Not started', 
+      value: breathingCount > 0 ? `${breathingCount} Completed cycles` : 'Not started', 
       label: 'Breathing Exercises', 
-      color: '#4f46e5' 
+      color: '#4f46e5',
+      description: breathingCount > 0 ? `${Math.round(breathingCount/7)} mins per week average` : 'Start your first session'
     },
     { 
       icon: <FiBookOpen />, 
       value: journalEntries.length, 
       label: 'Journal Entries', 
-      color: '#10b981' 
+      color: '#10b981',
+      description: journalEntries.length > 0 ? 
+        `Last entry: ${new Date(journalEntries[0].date).toLocaleDateString()}` : 
+        'Write your first entry'
     },
     { 
       icon: <FiCalendar />, 
       value: events.length, 
       label: 'Upcoming Events', 
-      color: '#f59e0b' 
+      color: '#f59e0b',
+      description: events.length > 0 ? 
+        `Next event: ${events[0].title}` : 
+        'No upcoming events'
     }
   ];
 
@@ -324,10 +362,6 @@ const EventCarousel = () => {
     { 
       tip: 'Take a 10-minute walk outside',
       benefit: 'Increases serotonin levels and improves overall mental wellbeing'
-    },
-    { 
-      tip: 'Connect with a friend or family member',
-      benefit: 'Strengthens social connections which are vital for mental health'
     }
   ];
 
@@ -338,35 +372,6 @@ const EventCarousel = () => {
     { value: 'anxious', label: '😰 Anxious', color: 'bg-yellow-100 text-yellow-800' },
     { value: 'angry', label: '😡 Angry', color: 'bg-red-100 text-red-800' }
   ];
-
-  // const mentalHealthArticles = [
-  //   {
-  //     title: '5 Simple Techniques to Reduce Anxiety',
-  //     summary: 'Learn practical methods to manage anxiety in your daily life',
-  //     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773',
-  //     link: 'http://localhost:5173/user/blogs'
-  //   },
-  //   {
-  //     title: 'The Science of Mindfulness',
-  //     summary: 'How mindfulness changes your brain and improves mental health',
-  //     image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597',
-  //     link: 'http://localhost:5173/user/blogs'
-  //   },
-  //   {
-  //     title: 'Building Resilience in Tough Times',
-  //     summary: 'Strategies to develop emotional resilience during challenges',
-  //     image: 'https://images.unsplash.com/photo-1498855926480-d98e83099315',
-  //     link: 'http://localhost:5173/user/blogs'
-  //   }
-  // ];
-
-  // if (loading) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className={`user-home ${darkMode ? 'dark' : ''}`}>
@@ -424,30 +429,36 @@ const EventCarousel = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Your Wellness Dashboard</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
               <motion.div 
                 key={index}
-                className="stat-card bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 flex items-start"
+                className="stat-card bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 flex flex-col"
                 whileHover={{ y: -5 }}
                 style={{ borderLeft: `4px solid ${stat.color}` }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div 
-                  className="stat-icon text-2xl p-3 rounded-lg mr-4"
-                  style={{ 
-                    color: stat.color,
-                    backgroundColor: `${stat.color}20`
-                  }}
-                >
-                  {stat.icon}
+                <div className="flex items-start mb-4">
+                  <div 
+                    className="stat-icon text-2xl p-3 rounded-lg mr-4"
+                    style={{ 
+                      color: stat.color,
+                      backgroundColor: `${stat.color}20`
+                    }}
+                  >
+                    {stat.icon}
+                  </div>
+                  <div className="stat-content">
+                    <h3 className="text-2xl font-bold text-gray-800 dark:text-white">{stat.value}</h3>
+                    <p className="text-gray-600 dark:text-gray-300">{stat.label}</p>
+                  </div>
                 </div>
-                <div className="stat-content">
-                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">{stat.value}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{stat.label}</p>
-                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-auto">
+                  {stat.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -463,14 +474,6 @@ const EventCarousel = () => {
           >
             Overview
           </button>
-          {/* <button 
-            className={`tab-btn px-6 py-3 font-medium ${activeTab === 'resources' ? 
-              'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' : 
-              'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
-            onClick={() => setActiveTab('resources')}
-          >
-            Mental Health Resources
-          </button> */}
           <button 
             className={`tab-btn px-6 py-3 font-medium ${activeTab === 'tools' ? 
               'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' : 
@@ -548,49 +551,6 @@ const EventCarousel = () => {
               </div>
             </motion.section>
           </div>
-        )}
-
-        {activeTab === 'resources' && (
-          <motion.section 
-            className="resources-section"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Mental Health Resources</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mentalHealthArticles.map((article, index) => (
-                <motion.div
-                  key={index}
-                  className="article-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                  whileHover={{ y: -5 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="h-48 overflow-hidden">
-                    <img 
-                      src={article.image} 
-                      alt={article.title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{article.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{article.summary}</p>
-                    <a 
-                      href={article.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
-                    >
-                      Read More
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
         )}
 
         {activeTab === 'tools' && (
@@ -771,12 +731,12 @@ const EventCarousel = () => {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-sm text-gray-500">
-                          {new Date(entry.date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
+                          {new Date(entry.date).toLocaleDateString('id-ID', {
+                          timeZone: 'Asia/Jakarta',
+                          weekday: 'long',    // Senin, Selasa, ...
+                          year: 'numeric',    // 2025
+                          month: 'long',      // Januari, Februari, ...
+                          day: 'numeric',
                           })}
                         </span>
                       </div>
@@ -796,7 +756,6 @@ const EventCarousel = () => {
         )}
       </div>
       <CommunityChat />
-
     </div>
   );
 };

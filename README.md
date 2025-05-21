@@ -44,7 +44,6 @@ HaloSani adalah _upgrade_ dari versi sebelumnya, dengan peningkatan besar pada f
 | Chat Room                  | komunitas chat |
 | Ebook                      | title, link ebook, image, deskripsi singkat |
 | Notifikasi ke User         | Kirim notifikasi via email (SMTP) |
-| Kelola Akun User           | Lihat, edit, dan hapus akun user |
 | Feedback User              | Lihat feedback yang dikirim user |
 
 #### 🆕 Manajemen Admin
@@ -60,7 +59,6 @@ HaloSani adalah _upgrade_ dari versi sebelumnya, dengan peningkatan besar pada f
   - OTP dikirim ke email sebelum bisa login
 - **Login** dengan email dan password
 - **Forgot Password** dikirim via SMTP ke email user
-- **Profile User**: lihat dan update profil
 - **Logout**
 
 #### 🏠 Dashboard User

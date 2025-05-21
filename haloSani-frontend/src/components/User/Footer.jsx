@@ -90,7 +90,9 @@ const Footer = () => {
         { name: 'Blog', url: 'user/blogs' },
         { name: 'Ebook', url: 'user/ebooks' },
         { name: 'Video', url: 'user/videos' },
-        { name: 'FAQ', url: 'user/f&q' }
+        { name: 'FAQ', url: 'user/f&q' },
+        { name: 'Profesional Info', url: 'user/infopsikolog' }
+
 
       ]
     }

@@ -5,6 +5,8 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import UserLogin from './pages/User/Auth/Login';
 import UserRegister from './pages/User/Auth/Register';
 import UserOtpVerification from './pages/User/Auth/OtpVerification';
+import ForgotPassword from './pages/User/Auth/ForgotPassword';
+import ResetPassword from './pages/User/Auth/ResetPassword';
 import UserHome from './pages/User/UserHome';
 import BlogPage from './pages/Admin/BlogPage';
 import EditBlogPage from './pages/Admin/EditBlogPage';
@@ -13,6 +15,7 @@ import EbookCMS from './pages/Admin/EbookCMS';
 import WebInfo from './pages/Admin/WebInfo';
 import VideoAdmin from './pages/Admin/VideoAdmin';
 import FeedbackPage from './pages/Admin/FeedbackPage';
+import PsychologistCMS from './pages/Admin/PsychologistCMS';
 import NotificationManagement from './pages/Admin/NotificationManagement';
 import UserProtectedRoute from './components/UserProtectedRoute';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
@@ -27,6 +30,8 @@ import Ebook from './pages/User/Ebook';
 import Freq from './pages/User/Freq';
 import OurTeam from './pages/User/OurTeam';
 import Feedback from './pages/User/Feedback';
+import Psychologists from './pages/User/Psychologists';
+
 
 
 
@@ -42,6 +47,8 @@ const App = () => {
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/user/register" element={<UserRegister />} />
         <Route path="/user/verify-otp" element={<UserOtpVerification />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Admin Routes */}
         <Route element={<AdminProtectedRoute />}>
@@ -54,6 +61,8 @@ const App = () => {
           <Route path="/admin/video" element={<VideoAdmin />} />
           <Route path="/admin/notifications" element={<NotificationManagement />} />
           <Route path="/admin/feedback" element={<FeedbackPage />} />
+          <Route path="/admin/psikolog" element={<PsychologistCMS />} />
+
 
         </Route>
 
@@ -69,6 +78,7 @@ const App = () => {
           <Route path="/user/f&q" element={<Freq />} />
           <Route path="/user/team" element={<OurTeam />} />
           <Route path="/user/feedback" element={<Feedback />} />
+          <Route path="/user/infopsikolog" element={<Psychologists />} />
 
 
 

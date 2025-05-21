@@ -21,19 +21,23 @@ class User extends Authenticatable
         'address', 
         'is_verified',
         'otp',
-        'otp_expires_at'
+        'otp_expires_at',
+        'password_reset_token',
+        'password_reset_token_expires_at'
     ];
 
     protected $hidden = [
         'password', 
         'remember_token',
         'otp',
-        'otp_expires_at'
+        'otp_expires_at',
+        'password_reset_token'
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'otp_expires_at' => 'datetime',
+        'password_reset_token_expires_at' => 'datetime',
         'is_verified' => 'boolean'
     ];
 }

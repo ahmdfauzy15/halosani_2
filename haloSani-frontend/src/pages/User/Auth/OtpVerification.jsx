@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../../../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { motion } from 'framer-motion';
+import { FiMail, FiClock, FiArrowRight } from 'react-icons/fi';
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState('');
@@ -13,23 +15,74 @@ const OtpVerification = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get user ID and email from navigation state
   const { userId, email } = location.state || {};
 
   useEffect(() => {
     if (!userId || !email) {
-      toast.error('Session expired. Please register again.');
-      navigate('/user/register');
+      toast.error('Session expired. Please register again.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        style: {
+          background: '#F44336',
+          color: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+        }
+      });
+      navigate('/user/register', { replace: true });
       return;
     }
 
-    // Start countdown for resend OTP
     const timer = countdown > 0 && setInterval(() => {
       setCountdown(prev => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
   }, [countdown, navigate, userId, email]);
+
+  const showSuccessNotification = (message) => {
+    toast.success(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      style: {
+        background: '#4CAF50',
+        color: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+      }
+    });
+  };
+
+  const showErrorNotification = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      style: {
+        background: '#F44336',
+        color: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+      }
+    });
+  };
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -47,28 +100,32 @@ const OtpVerification = () => {
         otp: otp
       });
 
-      toast.success(response.data.message);
+      showSuccessNotification('Email verified successfully! Welcome to our community ❤️');
       
-      // Save token and user data
       localStorage.setItem('user_token', response.data.token);
       localStorage.setItem('user_data', JSON.stringify(response.data.user));
       
-      // Redirect to dashboard
-      navigate('/user/dashboard');
+      navigate('/user/dashboard', { replace: true });
     } catch (error) {
       console.error('OTP Verification Error:', error);
       
-      const errorMessage = error.response?.data?.message || 
-                         error.response?.data?.error || 
-                         'OTP verification failed';
+      let errorMessage = 'OTP verification failed. Please try again.';
+      if (error.response) {
+        errorMessage = error.response.data.message || 
+                     error.response.data.error || 
+                     errorMessage;
+        
+        if (error.response.data.message?.includes('expired')) {
+          errorMessage = 'OTP has expired. Please request a new one.';
+          setCountdown(0);
+        } else if (error.response.status === 404) {
+          errorMessage = 'User not found. Please register again.';
+          setTimeout(() => navigate('/user/register', { replace: true }), 2000);
+        }
+      }
       
       setError(errorMessage);
-      toast.error(errorMessage);
-      
-      // Jika error karena OTP expired, tampilkan tombol resend
-      if (error.response?.data?.message?.includes('expired')) {
-        setCountdown(0);
-      }
+      showErrorNotification(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -85,106 +142,187 @@ const OtpVerification = () => {
         user_id: userId
       });
       
-      toast.success(response.data.message);
-      setCountdown(60); // Reset countdown
+      showSuccessNotification('New OTP sent successfully!');
+      setCountdown(60);
       
-      // Tampilkan waktu kedaluwarsa OTP baru jika ada
       if (response.data.expires_at) {
-        toast.info(`New OTP will expire at ${new Date(response.data.expires_at).toLocaleTimeString()}`);
+        const expiryTime = new Date(response.data.expires_at);
+        toast.info(`New OTP will expire at ${expiryTime.toLocaleTimeString()}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: {
+            background: '#2196F3',
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }
+        });
       }
     } catch (error) {
       console.error('Resend OTP Error:', error);
       
-      const errorMessage = error.response?.data?.message || 
-                         error.response?.data?.error || 
-                         'Failed to resend OTP';
+      let errorMessage = 'Failed to resend OTP. Please try again.';
+      if (error.response) {
+        errorMessage = error.response.data.message || 
+                     error.response.data.error || 
+                     errorMessage;
+        
+        if (error.response.status === 404) {
+          errorMessage = 'User not found. Please register again.';
+          setTimeout(() => navigate('/user/register', { replace: true }), 2000);
+        }
+      } else if (error.request) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
       
       setError(errorMessage);
-      toast.error(errorMessage);
+      showErrorNotification(errorMessage);
     } finally {
       setResendLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-indigo-600 py-6 px-8 text-center">
-          <h1 className="text-2xl font-bold text-white">Verify Your Email</h1>
-          <p className="text-indigo-100 mt-1">We've sent a code to {email}</p>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4"
+    >
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 py-8 px-8 text-center">
+          <motion.h1 
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-3xl font-bold text-white"
+          >
+            Verify Your Email
+          </motion.h1>
+          <motion.p 
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-purple-100 mt-2"
+          >
+            We've sent a verification code to {email}
+          </motion.p>
         </div>
         
         <div className="p-8">
           {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+            <motion.div 
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"
+            >
               {error}
-            </div>
+            </motion.div>
           )}
           
           <form onSubmit={handleVerify} className="space-y-6">
-            <div>
-              <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
-                Enter 6-digit OTP
-              </label>
-              <input
-                type="text"
-                id="otp"
-                name="otp"
-                value={otp}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                  setOtp(value);
-                  setError(null);
-                }}
-                className="w-full px-4 py-3 text-center text-xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                maxLength={6}
-                inputMode="numeric"
-                pattern="\d{6}"
-                required
-                autoFocus
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Verifying...
-                </>
-              ) : 'Verify OTP'}
-            </button>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FiMail className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  id="otp"
+                  name="otp"
+                  value={otp}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                    setOtp(value);
+                    setError(null);
+                  }}
+                  className="w-full pl-10 pr-4 py-3 text-center text-xl font-mono border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
+                  placeholder="6-digit code"
+                  maxLength={6}
+                  inputMode="numeric"
+                  pattern="\d{6}"
+                  required
+                  autoFocus
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-4 px-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg ${loading ? 'opacity-80 cursor-not-allowed' : ''}`}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Verifying...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center space-x-2">
+                    <span className="font-semibold">Verify & Continue</span>
+                    <FiArrowRight className="w-4 h-4" />
+                  </div>
+                )}
+              </button>
+            </motion.div>
           </form>
 
-          <div className="mt-6 text-center">
+          <motion.div 
+            className="mt-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
             <p className="text-sm text-gray-600">
               Didn't receive the code?{' '}
               <button
                 onClick={handleResendOtp}
                 disabled={countdown > 0 || resendLoading}
-                className={`text-indigo-600 font-medium ${countdown > 0 || resendLoading ? 'opacity-50 cursor-not-allowed' : 'hover:text-indigo-800'}`}
+                className={`text-purple-600 font-medium transition-colors ${countdown > 0 || resendLoading ? 'opacity-50 cursor-not-allowed' : 'hover:text-purple-800'}`}
               >
                 {resendLoading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-1 h-4 w-4 text-indigo-600 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <span className="flex items-center justify-center space-x-1">
+                    <svg className="animate-spin h-4 w-4 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Sending...
-                  </>
-                ) : `Resend OTP ${countdown > 0 ? `(${countdown}s)` : ''}`}
+                    <span>Sending...</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center space-x-1">
+                    <FiClock className="w-4 h-4" />
+                    <span>Resend OTP {countdown > 0 ? `(${countdown}s)` : ''}</span>
+                  </span>
+                )}
               </button>
             </p>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

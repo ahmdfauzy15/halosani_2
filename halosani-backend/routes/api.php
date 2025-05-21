@@ -106,6 +106,14 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
 });
 
+use App\Http\Controllers\Admin\PsychologistController as AdminPsychologistController;
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::get('/psychologists', [AdminPsychologistController::class, 'index']);
+    Route::post('/psychologists', [AdminPsychologistController::class, 'store']);
+    Route::get('/psychologists/{id}', [AdminPsychologistController::class, 'show']);
+    Route::put('/psychologists/{id}', [AdminPsychologistController::class, 'update']);
+    Route::delete('/psychologists/{id}', [AdminPsychologistController::class, 'destroy']);
+});
 // Admin Feedback Routes
 // use App\Http\Controllers\Admin\FeedbackController;
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
@@ -146,6 +154,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+// Password Reset Routes
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 // Route::apiResource('/feedback', UserFeedback::class)->only(['index', 'store']);
 
 // User Content Routes (Event, Blog, Video, Ebook, Web Info)
@@ -157,6 +169,7 @@ use App\Http\Controllers\User\WebInfoController as UserWebInfoController;
 // use App\Http\Controllers\User\FeedbackController ;
 use App\Http\Controllers\User\ChatRoomController as UserChatRoomController ;
 use App\Http\Controllers\User\DashboardController as Dashuser;
+use App\Http\Controllers\User\PsychologistController as UserPsychologistController ;
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
@@ -194,5 +207,9 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     
     // User dapat melihat detail chat room
     Route::get('/chat-rooms/{id}', [UserChatRoomController::class, 'show']);
+
+    Route::get('/psychologists', [UserPsychologistController::class, 'index']);
+    Route::get('/psychologists/{id}', [UserPsychologistController::class, 'show']);
+    Route::get('/psychologists/specializations', [UserPsychologistController::class, 'specializations']);
 
 });

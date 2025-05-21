@@ -369,7 +369,7 @@ const AdminDashboard = () => {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/admin/events')}
+                onClick={() => navigate('/admin/event-cms')}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition text-sm"
               >
                 Schedule Event

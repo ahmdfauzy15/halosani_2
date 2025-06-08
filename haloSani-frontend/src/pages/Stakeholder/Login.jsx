@@ -29,48 +29,40 @@ const AdminLogin = () => {
   };
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setErrors({});
-  
-  // Tambahkan validasi username di sini
-  if (formData.username !== 'admin1' && formData.username !== 'admin2') {
-    setIsLoading(false);
-    toast.error('Hanya admin yang diizinkan untuk login');
-    setErrors({ username: ['Hanya admin yang diizinkan untuk login'] });
-    return;
-  }
-
-  try {
-    const response = await api.post('/admin/login', formData);
+    e.preventDefault();
+    setIsLoading(true);
+    setErrors({});
     
-    if (response.data.success) {
-      localStorage.setItem('admin_token', response.data.data.token);
-      toast.success(response.data.message);
-      navigate('/admin/dashboard');
-    } else {
-      toast.error(response.data.message);
-      if (response.data.errors) {
-        setErrors(response.data.errors);
+    try {
+      const response = await api.post('/admin/login', formData);
+      
+      if (response.data.success) {
+        localStorage.setItem('admin_token', response.data.data.token);
+        toast.success(response.data.message);
+        navigate('/stakholder/blogs'); 
+      } else {
+        toast.error(response.data.message);
+        if (response.data.errors) {
+          setErrors(response.data.errors);
+        }
       }
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      let errorMessage = 'Login failed';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      toast.error(errorMessage);
+      
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    
-    let errorMessage = 'Login failed';
-    if (error.response?.data?.message) {
-      errorMessage = error.response.data.message;
-    }
-    
-    toast.error(errorMessage);
-    
-    if (error.response?.data?.errors) {
-      setErrors(error.response.data.errors);
-    }
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 p-4">
@@ -164,7 +156,11 @@ const AdminLogin = () => {
                 </label>
               </div>
 
-         
+              {/* <div className="text-sm">
+                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                  Forgot password?
+                </a>
+              </div> */}
             </div>
 
             {/* Submit Button */}

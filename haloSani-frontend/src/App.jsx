@@ -14,6 +14,19 @@ import EventCMS from './pages/Admin/EventCMS';
 import EbookCMS from './pages/Admin/EbookCMS';
 import WebInfo from './pages/Admin/WebInfo';
 import VideoAdmin from './pages/Admin/VideoAdmin';
+
+
+import AdminLoginstack from './pages/Stakeholder/Login';
+import Videostack from './pages/Stakeholder/VideoAdmin';
+import BlogPagestack from './pages/Stakeholder/BlogPage';
+import EditBlogPagesstack from './pages/Stakeholder/EditBlogPage';
+import EventCMSstack from './pages/Stakeholder/EventCMS';
+import EbookCMSstack from './pages/Stakeholder/EbookCMS';
+import FeedbackPagestack from './pages/Stakeholder/FeedbackPage';
+import PsychologistCMSstack from './pages/Stakeholder/PsychologistCMS';
+
+
+
 import FeedbackPage from './pages/Admin/FeedbackPage';
 import PsychologistCMS from './pages/Admin/PsychologistCMS';
 import NotificationManagement from './pages/Admin/NotificationManagement';
@@ -44,6 +57,7 @@ const App = () => {
 
         {/* Public Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/stakeholder/login" element={<AdminLoginstack />} />
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/user/register" element={<UserRegister />} />
         <Route path="/user/verify-otp" element={<UserOtpVerification />} />
@@ -63,6 +77,14 @@ const App = () => {
           <Route path="/admin/feedback" element={<FeedbackPage />} />
           <Route path="/admin/psikolog" element={<PsychologistCMS />} />
 
+          <Route path="/stakholder/blogs" element={<BlogPagestack />} />
+          <Route path="/stakholder/blogs/:id/edit" element={<EditBlogPagesstack />} />
+          <Route path="/stakholder/event-cms" element={<EventCMSstack />} />
+          <Route path="/stakholder/ebook" element={<EbookCMSstack />} />
+          <Route path="/stakholder/video" element={<Videostack />} />
+          <Route path="/stakholder/feedback" element={<FeedbackPagestack />} />
+          <Route path="/stakholder/psikolog" element={<PsychologistCMSstack />} />
+
 
         </Route>
 
@@ -79,6 +101,7 @@ const App = () => {
           <Route path="/user/team" element={<OurTeam />} />
           <Route path="/user/feedback" element={<Feedback />} />
           <Route path="/user/infopsikolog" element={<Psychologists />} />
+
 
 
 

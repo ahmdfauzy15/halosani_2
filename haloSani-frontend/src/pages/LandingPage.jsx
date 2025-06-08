@@ -399,6 +399,8 @@ const LandingPage = () => {
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
             <a href="/admin/login">Admin</a>
+            <a href="/stakeholder/login">care.mind.id</a>
+
 
           </div>
           <div className="footer-social">

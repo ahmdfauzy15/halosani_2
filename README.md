@@ -1,4 +1,4 @@
-# HaloSani
+# HaloSani 2
 
 HaloSani adalah sebuah aplikasi web edukasi kesehatan mental berbasis Laravel (RESTful API) dan React JS (Frontend), yang dikembangkan sebagai Tugas Akhir oleh:
 

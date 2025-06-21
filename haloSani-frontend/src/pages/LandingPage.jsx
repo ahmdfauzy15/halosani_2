@@ -1,22 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiArrowRight, FiChevronDown } from 'react-icons/fi';
+import { FaInstagram, FaTwitter, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import './LandingPage.css';
 import halosanilan from '../assets/halosani_lan.png';
+
+// Particle component for better performance
+const Particle = ({ index }) => {
+  const size = Math.random() * 10 + 5;
+  return (
+    <motion.div
+      className="particle"
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: [0, 0.8, 0],
+        x: [0, Math.random() * 100 - 50],
+        y: [0, Math.random() * 100 - 50]
+      }}
+      transition={{
+        duration: Math.random() * 10 + 10,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        delay: index * 0.2
+      }}
+      style={{
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        background: `hsl(${Math.random() * 60 + 200}, 70%, 60%)`
+      }}
+    />
+  );
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const controls = useAnimation();
   const [ref, inView] = useInView();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   useEffect(() => {
     if (inView) {
       controls.start('visible');
     }
   }, [controls, inView]);
+
+  // Auto-rotate testimonials
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -34,12 +73,14 @@ const LandingPage = () => {
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5,
+        type: 'spring',
+        damping: 10,
+        stiffness: 100,
         ease: 'easeOut'
       }
     }
@@ -49,17 +90,20 @@ const LandingPage = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8 }
+      transition: { 
+        duration: 0.8,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
     }
   };
 
   const navItems = [
     { 
-      label: 'Features', 
+      label: 'Fitur', 
       action: () => document.getElementById('features').scrollIntoView({ behavior: 'smooth' }) 
     },
     { 
-      label: 'Stories', 
+      label: 'Pengalaman Pengguna', 
       action: () => document.getElementById('testimonials').scrollIntoView({ behavior: 'smooth' }) 
     },
     { 
@@ -70,105 +114,127 @@ const LandingPage = () => {
 
   return (
     <div className="halosani-landing">
-      {/* Gradient Background */}
-      <div className="gradient-bg"></div>
+      {/* Animated Gradient Background */}
+      <motion.div 
+        className="gradient-bg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+      />
       
-      {/* Floating Particles */}
-        <div className="particles">
-        {[...Array(15)].map((_, i) => (
-          <div key={i} className="particle" style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            width: `${Math.random() * 10 + 5}px`,
-            height: `${Math.random() * 10 + 5}px`,
-            animationDelay: `${Math.random() * 5}s`
-          }}></div>
+      {/* Optimized Floating Particles */}
+      <div className="particles-container">
+        {[...Array(30)].map((_, i) => (
+          <Particle key={i} index={i} />
         ))}
       </div>
 
-       {/* Mobile Navigation */}
-      <nav className="mobile-navbar">
+      {/* Floating Cursor Trail Effect */}
+      <div className="cursor-trail" id="cursor-trail"></div>
+
+      {/* Mobile Navigation */}
+      <motion.nav 
+        className="mobile-navbar"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <motion.div 
           className="navbar-brand"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <span className="halo">Halo</span>
           <span className="sani">sani</span>
         </motion.div>
         
-        <button className="menu-toggle" onClick={toggleMenu}>
-          {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-        </button>
-      </nav>
-
-      
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <motion.div 
-          className="mobile-menu"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+        <motion.button 
+          className="menu-toggle" 
+          onClick={toggleMenu}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <div className="menu-items">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={index}
-                className="menu-item"
-                onClick={() => {
-                  item.action();
-                  setIsMenuOpen(false);
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {item.label}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-      )}
+          {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        </motion.button>
+      </motion.nav>
 
-      {/* Navigation */}
-        <nav className="landing-nav">
+      {/* Mobile Menu with AnimatePresence */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            className="mobile-menu-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <motion.div 
+              className="mobile-menu"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="menu-items">
+                {navItems.map((item, index) => (
+                  <motion.button
+                    key={index}
+                    className="menu-item"
+                    onClick={() => {
+                      item.action();
+                      setIsMenuOpen(false);
+                    }}
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.2 }}
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.label}
+                    <FiArrowRight className="menu-item-arrow" />
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Navigation */}
+      <motion.nav 
+        className="landing-nav"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         <motion.div 
           className="logo"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <span className="halo">Halo</span>
           <span className="sani">sani</span>
         </motion.div>
         <div className="nav-links">
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="nav-link"
-            onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
-          >
-            Features
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="nav-link"
-            onClick={() => document.getElementById('testimonials').scrollIntoView({ behavior: 'smooth' })}
-          >
-            Stories
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="nav-link"
-            onClick={() => navigate('/user/login')}
-          >
-            Login
-          </motion.button>
+          {navItems.map((item, index) => (
+            <motion.button 
+              key={index}
+              whileHover={{ 
+                scale: 1.05,
+                color: '#6366f1'
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="nav-link"
+              onClick={item.action}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              {item.label}
+              <div className="nav-link-underline" />
+            </motion.button>
+          ))}
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Hero Section */}
       <motion.section 
@@ -179,51 +245,80 @@ const LandingPage = () => {
       >
         <div className="hero-content">
           <motion.div className="hero-text" variants={itemVariants}>
-            <h1 className="hero-tagline">
-              <span className="gradient-text">Mental Wellness</span> 
+            <motion.h1 className="hero-tagline">
+              <motion.span 
+                className="gradient-text"
+                initial={{ backgroundPosition: '0% 50%' }}
+                animate={{ backgroundPosition: '100% 50%' }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  repeatType: 'reverse',
+                  ease: 'linear'
+                }}
+              >
+                Kesehatan Mental
+              </motion.span> 
               <br />
-              Starts Here
-            </h1>
-            <p className="hero-description">
-              Di dunia yang serba cepat saat ini, kesehatan mental telah menjadi aspek penting dari kesejahteraan keseluruhan. HaloSani memahami tantangan yang dihadapi individu dalam mengelola kesehatan mental, dan kami hadir untuk menyediakan lingkungan yang suportif dan mudah diakses. Baik Anda berurusan dengan stres, kecemasan, depresi, atau masalah kesehatan mental lainnya,HaloSani adalah teman terpercaya untuk temani anda dalam edukasi kesehatan mental dan dalam perjalanan menuju kesehatan mental yang lebih baik.
-            </p>
-            <div className="hero-buttons">
+              Dimulai dari Sini
+            </motion.h1>
+            <motion.p className="hero-description" variants={itemVariants}>
+              Di dunia yang serba cepat saat ini, kesehatan mental telah menjadi aspek penting dari kesejahteraan keseluruhan. HaloSani memahami tantangan yang dihadapi individu dalam mengelola kesehatan mental, dan kami hadir untuk menyediakan lingkungan yang suportif dan mudah diakses.
+            </motion.p>
+            <motion.div className="hero-buttons" variants={itemVariants}>
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 10px 25px -5px rgba(99, 102, 241, 0.4)'
+                }}
                 whileTap={{ scale: 0.95 }}
                 className="primary-btn"
                 onClick={() => navigate('/user/login')}
               >
-                Begin Your Journey
+                Mulailah Perjalanan Anda
+                <FiArrowRight className="btn-icon" />
               </motion.button>
-              {/* <motion.button
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="secondary-btn"
+                onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
               >
-                How It Works
-              </motion.button> */}
-            </div>
+                Pelajari Lebih Lanjut
+                <FiChevronDown className="btn-icon" />
+              </motion.button>
+            </motion.div>
           </motion.div>
           <motion.div 
             className="hero-image-container"
             variants={itemVariants}
           >
-            <div className="phone-mockup">
+            <motion.div 
+              className="phone-mockup"
+              initial={{ rotate: -5, scale: 0.9 }}
+              animate={{ rotate: 5, scale: 1 }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                repeatType: 'reverse',
+                ease: 'easeInOut'
+              }}
+            >
               <img 
                 src={halosanilan}
                 alt="Halosani app interface" 
                 className="mockup-screen"
               />
-            </div>
+            </motion.div>
             <div className="floating-elements">
               <motion.div 
                 className="floating-element element-1"
                 animate={{
-                  y: [0, -15, 0],
+                  y: [0, -25, 0],
+                  rotate: [0, 5, 0]
                 }}
                 transition={{
-                  duration: 4,
+                  duration: 6,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -233,10 +328,11 @@ const LandingPage = () => {
               <motion.div 
                 className="floating-element element-2"
                 animate={{
-                  y: [0, 15, 0],
+                  y: [0, 20, 0],
+                  rotate: [0, -5, 0]
                 }}
                 transition={{
-                  duration: 5,
+                  duration: 7,
                   repeat: Infinity,
                   ease: "easeInOut",
                   delay: 0.5
@@ -247,10 +343,11 @@ const LandingPage = () => {
               <motion.div 
                 className="floating-element element-3"
                 animate={{
-                  y: [0, -10, 0],
+                  y: [0, -15, 0],
+                  scale: [1, 1.1, 1]
                 }}
                 transition={{
-                  duration: 6,
+                  duration: 5,
                   repeat: Infinity,
                   ease: "easeInOut",
                   delay: 1
@@ -261,6 +358,23 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
+        
+        {/* Scroll indicator */}
+        <motion.div 
+          className="scroll-indicator"
+          animate={{
+            y: [0, 10, 0],
+            opacity: [0.6, 1, 0.6]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+        >
+          <FiChevronDown size={24} />
+        </motion.div>
       </motion.section>
 
       {/* Stats Section */}
@@ -272,27 +386,37 @@ const LandingPage = () => {
         variants={fadeIn}
       >
         <div className="stats-container">
-          <motion.div 
-            className="stat-card"
-            whileHover={{ y: -5 }}
-          >
-            <h3 className="stat-number">100%</h3>
-            <p className="stat-label">Terbuka Untuk Umum</p>
-          </motion.div>
-          <motion.div 
-            className="stat-card"
-            whileHover={{ y: -5 }}
-          >
-            <h3 className="stat-number">100%</h3>
-            <p className="stat-label">Menenmani Anda</p>
-          </motion.div>
-          <motion.div 
-            className="stat-card"
-            whileHover={{ y: -5 }}
-          >
-            <h3 className="stat-number">24/7</h3>
-            <p className="stat-label">Support Available</p>
-          </motion.div>
+          {stats.map((stat, index) => (
+            <motion.div 
+              key={index}
+              className="stat-card"
+              whileHover={{ 
+                y: -10,
+                boxShadow: '0 15px 30px -10px rgba(0, 0, 0, 0.1)'
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <motion.h3 
+                className="stat-number"
+                initial={{ scale: 0.8 }}
+                whileInView={{ scale: 1 }}
+                transition={{ 
+                  type: 'spring',
+                  stiffness: 200,
+                  damping: 10,
+                  delay: index * 0.1
+                }}
+                viewport={{ once: true }}
+              >
+                {stat.number}
+              </motion.h3>
+              <p className="stat-label">{stat.label}</p>
+              <div className="stat-icon">{stat.icon}</div>
+            </motion.div>
+          ))}
         </div>
       </motion.section>
 
@@ -303,10 +427,24 @@ const LandingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
         >
-          <h2>Teman Edukasi Kesehatan Mental Anda</h2>
-          <p>Fitur-fitur komprehensif yang dirancang untuk mendukung perjalanan kesehatan Anda</p>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            Teman Edukasi Kesehatan Mental Anda
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            Fitur-fitur komprehensif yang dirancang untuk mendukung perjalanan kesehatan Anda
+          </motion.p>
         </motion.div>
 
         <div className="features-grid">
@@ -314,15 +452,34 @@ const LandingPage = () => {
             <motion.div 
               key={index}
               className="feature-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                type: 'spring',
+                stiffness: 100
+              }}
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover={{ 
+                y: -10,
+                boxShadow: '0 20px 40px -15px rgba(99, 102, 241, 0.3)'
+              }}
             >
-              <div className="feature-icon">{feature.icon}</div>
+              <motion.div 
+                className="feature-icon"
+                whileHover={{ scale: 1.1 }}
+              >
+                {feature.icon}
+              </motion.div>
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
+              <motion.div 
+                className="feature-hover-bg"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileHover={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              />
             </motion.div>
           ))}
         </div>
@@ -330,6 +487,7 @@ const LandingPage = () => {
 
       {/* Testimonials Section */}
       <section id="testimonials" className="testimonials-section">
+        <div className="testimonials-bg"></div>
         <motion.div 
           className="section-header"
           initial={{ opacity: 0, y: 20 }}
@@ -337,57 +495,90 @@ const LandingPage = () => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2>Real Stories, Real Healing</h2>
+          <h2>Dukungan Nyata</h2>
           <p>Dengarkan cerita dari orang-orang yang telah mengubah kesehatan mental mereka dengan HaloSani</p>
         </motion.div>
 
         <div className="testimonials-container">
-          {testimonials.map((testimonial, index) => (
-            <motion.div 
-              key={index}
-              className="testimonial-card"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTestimonial}
+              className="testimonial-card active"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.5 }}
             >
               <div className="testimonial-content">
-                <p>"{testimonial.quote}"</p>
+                <p>"{testimonials[activeTestimonial].quote}"</p>
                 <div className="testimonial-author">
-                  <div className="author-avatar">{testimonial.avatar}</div>
+                  <div className="author-avatar">{testimonials[activeTestimonial].avatar}</div>
                   <div className="author-info">
-                    <h4>{testimonial.name}</h4>
-                    <p>{testimonial.role}</p>
+                    <h4>{testimonials[activeTestimonial].name}</h4>
+                    <p>{testimonials[activeTestimonial].role}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
-          ))}
+          </AnimatePresence>
+          
+          <div className="testimonial-dots">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                className={`dot ${index === activeTestimonial ? 'active' : ''}`}
+                onClick={() => setActiveTestimonial(index)}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Final CTA */}
       <motion.section 
         className="final-cta"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "-100px" }}
       >
         <div className="cta-container">
-          <h2>Siap memprioritaskan kesehatan mental Anda?</h2>
-          <p>Bergabunglah dengan kami dan orang yang telah menemukan keseimbangan dengan HaloSani</p>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            Siap memprioritaskan kesehatan mental Anda?
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            Bergabunglah dengan kami dan orang yang telah menemukan keseimbangan dengan HaloSani
+          </motion.p>
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: '0 15px 30px -5px rgba(99, 102, 241, 0.5)'
+            }}
             whileTap={{ scale: 0.95 }}
             className="cta-btn"
             onClick={() => navigate('/user/login')}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            viewport={{ once: true }}
           >
-            Get Started for Free
+            Mulai Sekarang
+            <FiArrowRight className="btn-icon" />
           </motion.button>
         </div>
       </motion.section>
 
+      
       {/* Footer */}
       <footer className="landing-footer">
         <div className="footer-content">
@@ -417,59 +608,78 @@ const LandingPage = () => {
   );
 };
 
-// Data for features
+// Data for stats
+const stats = [
+  {
+    number: "100%",
+    label: "Terbuka Untuk Umum",
+    icon: "🔓"
+  },
+  {
+    number: "100%",
+    label: "Menenmani Anda",
+    icon: "🤝"
+  },
+  {
+    number: "24/7",
+    label: "Tersedia Dukungan",
+    icon: "⏰"
+  }
+];
+
+// Enhanced features data
 const features = [
   {
     icon: '🧠',
     title: 'Mentor AI',
-    description: 'Menggunakan teknologi Large Language Model (LLM) dan RAG untuk memberikan dukungan, wawasan, dan saran terkait kesehatan mental.'
+    description: 'Menggunakan teknologi Large Language Model (LLM) dan RAG untuk memberikan dukungan, wawasan, dan saran terkait kesehatan mental secara real-time.'
   },
   {
     icon: '📘',
     title: 'Blog Kesehatan Mental',
-    description: 'Fitur Blog dalam aplikasi HaloSani dirancang untuk memberikan akses kepada pengguna ke berbagai informasi berkualitas yang relevan dengan kesehatan mental.'
+    description: 'Artikel berbasis penelitian dari ahli kesehatan mental untuk meningkatkan pemahaman dan kesadaran tentang berbagai isu psikologis.'
   },
   {
     icon: '🎥',
-    title: 'Video Kesehatan Mental',
-    description: 'Kumpulan sesi untuk video terkait kesehatan mental, tidur, kecemasan, dan lainnya'
+    title: 'Video Edukasi',
+    description: 'Konten video interaktif yang mencakup teknik relaksasi, manajemen stres, dan terapi perilaku kognitif sederhana.'
   },
   {
     icon: '👥',
-    title: 'Chat Community',
-    description: 'Chat Community dalam aplikasi HaloSani dirancang untuk menciptakan ruang interaksi yang inklusif dan mendukung'
+    title: 'Komunitas Support',
+    description: 'Ruang aman untuk berbagi pengalaman dan mendapatkan dukungan dari sesama pengguna yang memahami perjuangan Anda.'
   },
   {
     icon: '📝',
-    title: 'E-book',
-    description: 'Fitur ini memungkinkan pengguna untuk memperluas wawasan mereka, mendukung penelitian, dan meningkatkan pemahaman mereka tentang berbagai topik kesehatan mental.'
+    title: 'E-book Eksklusif',
+    description: 'Panduan mendalam tentang berbagai topik kesehatan mental yang dapat diunduh dan dipelajari sesuai kecepatan Anda.'
   },
   {
     icon: '🎯',
-    title: 'Event',
-    description: 'Fitur Event dalam aplikasi HaloSani dirancang untuk mempermudah pengguna mengetahui dan mengikuti berbagai acara yang berkaitan dengan kesehatan mental.'
+    title: 'Event Virtual',
+    description: 'Webinar dan workshop langsung dengan psikolog dan praktisi kesehatan mental terkemuka.'
   }
 ];
 
-// Data for testimonials
+// Enhanced testimonials data
 const testimonials = [
   {
-    quote: "Halosani membantu saya mengelola kecemasan saya dengan cara yang tidak pernah saya duga sebelumnya. Sesi yang dipandu sangat mengubah hidup saya.",
+    quote: "Halosani membantu saya mengelola kecemasan saya dengan cara yang tidak pernah saya duga sebelumnya. Sesi yang dipandu sangat mengubah hidup saya. Sekarang saya bisa tidur nyenyak dan menghadapi hari dengan lebih percaya diri.",
     avatar: "👩",
-    name: "Harmoni",
-    role: "Student, 22"
+    name: "Ghavira",
+    role: "Mahasiswa, 22 tahun"
   },
   {
-    quote: "Halosani adalah satu-satunya aplikasi yang benar-benar membantu saya mengembangkan strategi penanganan jangka panjang.",
+    quote: "Sebagai seseorang yang awalnya skeptis terhadap aplikasi kesehatan mental, Halosani benar-benar mengejutkan saya. Fitur mentor AI-nya sangat membantu ketika saya butuh seseorang untuk diajak bicara di tengah malam.",
     avatar: "👨",
     name: "Ahmad",
-    role: "Student, 21"
+    role: "Freelancer, 21 tahun"
   },
   {
-    quote: "Dukungan komunitas membuat saya merasa tidak sendirian. Saya telah mendapatkan teman sejati melalui perjalanan ini.",
+    quote: "Komunitas di Halosani membuat saya merasa tidak sendirian. Saya menemukan teman-teman yang memahami perjuangan saya tanpa menghakimi. Aplikasi ini lebih dari sekadar tool - ini adalah sistem pendukung yang nyata.",
     avatar: "🧑",
-    name: "Gagah.",
-    role: "Student, 21"
+    name: "Gagah",
+    role: "Karyawan, 21 tahun"
   }
 ];
 

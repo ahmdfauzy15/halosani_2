@@ -38,7 +38,7 @@ const Header = () => {
   const navItems = [
     { path: "/user/dashboard", icon: <FiHome />, label: "Home" },
     { path: "/user/blogs", icon: <FiBook />, label: "Blog" },
-    { path: "/user/webinfopage", icon: <FiInfo />, label: "About Us" },
+    { path: "/user/webinfopage", icon: <FiInfo />, label: "Tentang Kami" },
     { path: "/user/videos", icon: <FiVideo />, label: "Video" },
     { path: "/user/ebooks", icon: <FiBookOpen />, label: "Ebooks" },
     { path: "/user/f&q", icon: <FiKey />, label: "FAQ" },

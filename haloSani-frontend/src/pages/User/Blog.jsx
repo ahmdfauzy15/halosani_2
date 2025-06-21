@@ -8,7 +8,7 @@ const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('semua');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,12 +26,12 @@ const Blog = () => {
   }, []);
 
   // Get unique categories
-  const categories = ['All', ...new Set(blogs.map(blog => blog.category))];
+  const categories = ['semua', ...new Set(blogs.map(blog => blog.category))];
 
   const filteredBlogs = blogs.filter(blog =>
     (blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     blog.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedCategory === 'All' || blog.category === selectedCategory)
+    (selectedCategory === 'semua' || blog.category === selectedCategory)
   );
 
   // Function to clean up description text
@@ -57,7 +57,7 @@ const Blog = () => {
               animate={{ y: 0 }}
               className="text-4xl font-bold mb-4"
             >
-              Mental Health Blog
+              Blog Kesehatan Mental
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -65,7 +65,7 @@ const Blog = () => {
               transition={{ delay: 0.2 }}
               className="text-xl opacity-90 max-w-2xl mx-auto"
             >
-              Discover insights, tips, and stories to support your wellness journey
+              Temukan wawasan, kiat, dan cerita untuk mendukung perjalanan kesehatan Anda
             </motion.p>
           </div>
         </motion.section>
@@ -81,7 +81,7 @@ const Blog = () => {
             <div className="relative mb-6">
               <input
                 type="text"
-                placeholder="Search Topic"
+                placeholder="Cari Topik"
                 className="w-full px-5 py-3 pl-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

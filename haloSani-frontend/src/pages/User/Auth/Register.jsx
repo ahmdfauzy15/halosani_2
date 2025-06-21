@@ -120,7 +120,7 @@ const Register = () => {
             transition={{ delay: 0.4 }}
             className="text-3xl font-bold text-white"
           >
-            Begin Your Healing Journey
+            Mulailah Perjalanan Anda
           </motion.h1>
           <motion.p 
             initial={{ y: -10, opacity: 0 }}
@@ -128,8 +128,7 @@ const Register = () => {
             transition={{ delay: 0.5 }}
             className="text-purple-100 mt-2"
           >
-            Join our supportive community today
-          </motion.p>
+          Bergabunglah dengan komunitas pendukung kami hari ini          </motion.p>
         </div>
         
         <div className="p-8">
@@ -150,7 +149,7 @@ const Register = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Full Name"
+                  placeholder="Nama Lengkap"
                   required
                 />
               </div>
@@ -172,7 +171,7 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Email Address"
+                  placeholder="Alamat Email"
                   required
                 />
               </div>
@@ -196,8 +195,8 @@ const Register = () => {
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none appearance-none transition-all"
                   required
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="male">Pria</option>
+                  <option value="female">Wanita</option>
     
                 </select>
               </div>
@@ -215,7 +214,7 @@ const Register = () => {
                   value={formData.age}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Age"
+                  placeholder="Umur"
                   required
                 />
               </div>
@@ -237,7 +236,7 @@ const Register = () => {
                   value={formData.address}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Your Address"
+                  placeholder="Alamat Domisili"
                   required
                 />
               </div>
@@ -259,7 +258,7 @@ const Register = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Password (min 8 characters)"
+                  placeholder="Password (Harus 8 Karakter)"
                   minLength="8"
                   required
                 />
@@ -282,7 +281,7 @@ const Register = () => {
                   value={formData.password_confirmation}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition-all"
-                  placeholder="Confirm Password"
+                  placeholder="Konfirmasi Password"
                   minLength="8"
                   required
                 />
@@ -305,10 +304,10 @@ const Register = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Creating Your Safe Space...</span>
+                    <span>Menciptakan Ruang Aman Anda...</span>
                   </div>
                 ) : (
-                  <span className="font-semibold">Join Our Community</span>
+                  <span className="font-semibold">Bergabung Sekarang</span>
                 )}
               </button>
             </motion.div>
@@ -321,12 +320,12 @@ const Register = () => {
             transition={{ delay: 1.3 }}
           >
             <p className="text-sm text-gray-600">
-              Already part of our community?{' '}
+              Memiliki Akun?{' '}
               <button 
                 onClick={() => navigate('/user/login')}
                 className="text-purple-600 hover:text-purple-800 font-medium transition-colors"
               >
-                Sign in here
+                Sign in 
               </button>
             </p>
           </motion.div>

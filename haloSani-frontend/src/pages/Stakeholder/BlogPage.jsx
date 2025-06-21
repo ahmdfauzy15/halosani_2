@@ -25,7 +25,7 @@ const BlogPage = () => {
         });
         setBlogs(response.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
+        console.error('Gagal mengambil data blog:', error);
       }
     };
     fetchBlogs();
@@ -34,13 +34,13 @@ const BlogPage = () => {
   const handleAddBlog = async (event) => {
     event.preventDefault();
     if (!newBlog.title || !newBlog.description || !newBlog.image) {
-      alert("Title, description, and image are required");
+      alert("Judul, deskripsi, dan gambar wajib diisi");
       return;
     }
 
     const formData = new FormData();
     formData.append('title', newBlog.title);
-    // Preserve line breaks in description
+    // Mempertahankan line breaks dalam deskripsi
     formData.append('description', newBlog.description.replace(/\n/g, '<br>'));
     formData.append('image', newBlog.image);
 
@@ -57,8 +57,8 @@ const BlogPage = () => {
       setNewBlog({ title: '', description: '', image: null });
       setPreviewImage(null);
     } catch (error) {
-      console.error('Error adding blog:', error);
-      alert('Failed to add blog. Please try again.');
+      console.error('Gagal menambahkan blog:', error);
+      alert('Gagal menambahkan blog. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -69,11 +69,11 @@ const BlogPage = () => {
     if (file) {
       const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validFormats.includes(file.type)) {
-        alert('Please upload a valid image (JPEG, PNG, JPG)');
+        alert('Harap unggah gambar yang valid (JPEG, PNG, JPG)');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        alert('File size should not exceed 2MB');
+        alert('Ukuran file tidak boleh melebihi 2MB');
         return;
       }
       setNewBlog({ ...newBlog, image: file });
@@ -85,7 +85,7 @@ const BlogPage = () => {
   };
 
   const handleDeleteBlog = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this blog post?')) return;
+    if (!window.confirm('Apakah Anda yakin ingin menghapus posting blog ini?')) return;
     
     try {
       await api.delete(`/admin/blogs/${id}`, {
@@ -93,17 +93,17 @@ const BlogPage = () => {
       });
       setBlogs(blogs.filter(blog => blog.id !== id));
     } catch (error) {
-      console.error('Error deleting blog:', error);
-      alert('Failed to delete blog. Please try again.');
+      console.error('Gagal menghapus blog:', error);
+      alert('Gagal menghapus blog. Silakan coba lagi.');
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
-    navigate('/stakeholder/login');
+    navigate('/stakholder/login');
   };
 
-  // Format description to preserve line breaks
+  // Format deskripsi untuk mempertahankan line breaks
   const formatDescription = (text) => {
     if (!text) return '';
     return text.replace(/<br\s*\/?>/gi, '\n');
@@ -111,66 +111,66 @@ const BlogPage = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-    {/* Desktop Sidebar */}
+    {/* Sidebar Desktop */}
     <Sidebar onLogout={handleLogout} />
     
-    {/* Mobile Sidebar Toggle */}
+    {/* Toggle Sidebar Mobile */}
     {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
-      {/* Main Content Area */}
+      {/* Area Konten Utama */}
       <div className="flex-1 md:ml-20 lg:ml-64 flex flex-col min-h-screen">
-        {/* Scrollable Content Area */}
+        {/* Area Konten yang Dapat Digulir */}
         <div className="flex-1 overflow-y-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="space-y-6">
-              {/* Create Blog Card */}
+              {/* Kartu Buat Blog */}
               <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="text-xl font-semibold text-gray-800">Create New Blog Post</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">Buat Posting Blog Baru</h2>
                   <p className="text-sm text-gray-500 mt-1">
-                    Fill out the form below to create a new blog post
+                    Isi formulir di bawah untuk membuat posting blog baru
                   </p>
                 </div>
                 
                 <div className="p-6">
                   <form onSubmit={handleAddBlog} className="space-y-6">
                     <div className="grid grid-cols-1 gap-6">
-                      {/* Title */}
+                      {/* Judul */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Title <span className="text-red-500">*</span>
+                          Judul <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                          placeholder="Enter blog title"
+                          placeholder="Masukkan judul blog"
                           value={newBlog.title}
                           onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })}
                           required
                         />
                       </div>
 
-                      {/* Content */}
+                      {/* Konten */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Content <span className="text-red-500">*</span>
+                          Konten <span className="text-red-500">*</span>
                         </label>
                         <textarea
                           rows={8}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 whitespace-pre-wrap"
-                          placeholder="Write your blog content here... (Press Enter for new lines)"
+                          placeholder="Tulis konten blog Anda di sini... (Tekan Enter untuk baris baru)"
                           value={newBlog.description}
                           onChange={(e) => setNewBlog({ ...newBlog, description: e.target.value })}
                           required
                         />
                         <p className="mt-1 text-sm text-gray-500">
-                          Note: Line breaks will be preserved in the published post
+                          Catatan: Line breaks akan dipertahankan dalam posting yang diterbitkan
                         </p>
                       </div>
 
-                      {/* Image Upload */}
+                      {/* Unggah Gambar */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-3">
-                          Featured Image <span className="text-red-500">*</span>
+                          Gambar Unggulan <span className="text-red-500">*</span>
                         </label>
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="flex-1">
@@ -191,10 +191,10 @@ const BlogPage = () => {
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 <span className="text-sm font-medium text-gray-700">
-                                  {newBlog.image ? newBlog.image.name : 'Click to upload image'}
+                                  {newBlog.image ? newBlog.image.name : 'Klik untuk mengunggah gambar'}
                                 </span>
                                 <span className="text-xs text-gray-500 mt-1">
-                                  JPEG, PNG (Max 2MB)
+                                  JPEG, PNG (Maks 2MB)
                                 </span>
                               </label>
                             </div>
@@ -205,11 +205,11 @@ const BlogPage = () => {
                               <div className="bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
                                 <img 
                                   src={previewImage} 
-                                  alt="Preview" 
+                                  alt="Pratinjau" 
                                   className="w-full h-auto max-h-48 object-contain"
                                 />
                                 <div className="p-2 text-center text-sm text-gray-600 bg-white">
-                                  Image Preview
+                                  Pratinjau Gambar
                                 </div>
                               </div>
                             </div>
@@ -217,7 +217,7 @@ const BlogPage = () => {
                         </div>
                       </div>
 
-                      {/* Submit Button */}
+                      {/* Tombol Submit */}
                       <div className="flex justify-end pt-2">
                         <button
                           type="submit"
@@ -232,10 +232,10 @@ const BlogPage = () => {
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                               </svg>
-                              Publishing...
+                              Mempublikasikan...
                             </>
                           ) : (
-                            'Publish Blog Post'
+                            'Publikasikan Posting Blog'
                           )}
                         </button>
                       </div>
@@ -244,27 +244,27 @@ const BlogPage = () => {
                 </div>
               </div>
 
-              {/* Blog List Header */}
+              {/* Header Daftar Blog */}
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  Your Blog Posts
+                  Posting Blog Anda
                 </h2>
                 <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-                  {blogs.length} {blogs.length === 1 ? 'Post' : 'Posts'}
+                  {blogs.length} {blogs.length === 1 ? 'Posting' : 'Posting'}
                 </div>
               </div>
 
-              {/* Blog List */}
+              {/* Daftar Blog */}
               {blogs.length === 0 ? (
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-8 text-center">
                   <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <h3 className="mt-2 text-lg font-medium text-gray-900">
-                    No blog posts yet
+                    Belum ada posting blog
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    Get started by creating your first blog post above
+                    Mulailah dengan membuat posting blog pertama Anda di atas
                   </p>
                 </div>
               ) : (
@@ -279,11 +279,11 @@ const BlogPage = () => {
                                 {blog.title}
                               </h3>
                               <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                Published
+                                Diterbitkan
                               </span>
                             </div>
                             
-                            {/* Formatted description with preserved line breaks */}
+                            {/* Deskripsi yang diformat dengan line breaks yang dipertahankan */}
                             <div className="mt-3 text-gray-600 whitespace-pre-line">
                               {formatDescription(blog.description)}
                             </div>
@@ -304,7 +304,7 @@ const BlogPage = () => {
 
                           <div className="flex flex-shrink-0 gap-2">
                             <button
-                              onClick={() => navigate(`/admin/blogs/${blog.id}/edit`)}
+                              onClick={() => navigate(`/stakholder/blogs/${blog.id}/edit`)}
                               className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150"
                             >
                               Edit
@@ -313,7 +313,7 @@ const BlogPage = () => {
                               onClick={() => handleDeleteBlog(blog.id)}
                               className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150"
                             >
-                              Delete
+                              Hapus
                             </button>
                           </div>
                         </div>

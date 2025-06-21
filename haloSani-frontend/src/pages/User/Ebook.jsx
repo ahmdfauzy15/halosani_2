@@ -84,7 +84,7 @@ const categories = ['All', ...new Set(ebooks.map(ebook => ebook.category).filter
               animate={{ y: 0 }}
               className="text-4xl font-bold mb-4"
             >
-              Mental Health Ebooks
+              Ebooks Kesehatan Mental
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -92,7 +92,7 @@ const categories = ['All', ...new Set(ebooks.map(ebook => ebook.category).filter
               transition={{ delay: 0.2 }}
               className="text-xl opacity-90 max-w-2xl mx-auto"
             >
-              Discover valuable resources to support your wellness journey
+              Temukan sumber daya berharga untuk mendukung perjalanan kesehatan Anda
             </motion.p>
           </div>
         </motion.section>

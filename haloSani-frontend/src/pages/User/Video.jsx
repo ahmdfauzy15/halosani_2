@@ -77,7 +77,7 @@ const Video = () => {
                       animate={{ y: 0 }}
                       className="text-4xl font-bold mb-4"
                     >
-                      Mental Health Video
+                      Video Kesehatan Mental
                     </motion.h1>
                     <motion.p
                       initial={{ opacity: 0 }}
@@ -85,7 +85,7 @@ const Video = () => {
                       transition={{ delay: 0.2 }}
                       className="text-xl opacity-90 max-w-2xl mx-auto"
                     >
-                    Watch educational and inspirational videos to support your wellness journey                    </motion.p>
+                    Tonton video edukasi dan inspiratif untuk mendukung perjalanan kesehatan Anda</motion.p>
                   </div>
                 </motion.section>
 

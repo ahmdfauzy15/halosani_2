@@ -339,7 +339,7 @@ const SidebarHeader = () => (
       <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-300">
         Admin Panel
       </h2>
-      <p className="text-xs text-cyan-200/70">Manage your content</p>
+      <p className="text-xs text-cyan-200/70">Kelola Konten</p>
     </div>
   </div>
 );
@@ -406,7 +406,7 @@ const SystemStatus = () => (
     <div className="bg-indigo-800/50 rounded-xl p-3 border border-indigo-700/50">
       <div className="flex items-center">
         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></div>
-        <p className="text-xs text-indigo-200">System Status: Online</p>
+        <p className="text-xs text-indigo-200">Status: Online</p>
       </div>
     </div>
   </div>

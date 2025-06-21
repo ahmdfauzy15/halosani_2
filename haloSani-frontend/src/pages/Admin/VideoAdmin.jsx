@@ -22,13 +22,13 @@ const VideoAdmin = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch all videos
+  // Mengambil semua video
   const fetchVideos = async () => {
     try {
       const response = await api.get('/admin/videos');
       let sortedVideos = response.data;
       
-      // Sorting logic
+      // Logika pengurutan
       if (sortBy === 'newest') {
         sortedVideos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       } else if (sortBy === 'oldest') {
@@ -40,7 +40,7 @@ const VideoAdmin = () => {
       setVideos(sortedVideos);
       setLoading(false);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to fetch videos');
+      toast.error(error.response?.data?.message || 'Gagal mengambil data video');
       setLoading(false);
     }
   };
@@ -82,31 +82,31 @@ const VideoAdmin = () => {
     setIsSubmitting(true);
     try {
       if (currentVideo) {
-        // Update existing video
+        // Update video yang ada
         await api.put(`/admin/videos/${currentVideo.id}`, formData);
-        toast.success('Video updated successfully');
+        toast.success('Video berhasil diperbarui');
       } else {
-        // Create new video
+        // Buat video baru
         await api.post('/admin/videos', formData);
-        toast.success('Video added successfully');
+        toast.success('Video berhasil ditambahkan');
       }
       setIsModalOpen(false);
       fetchVideos();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'An error occurred');
+      toast.error(error.response?.data?.message || 'Terjadi kesalahan');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this video?')) {
+    if (window.confirm('Apakah Anda yakin ingin menghapus video ini?')) {
       try {
         await api.delete(`/admin/videos/${id}`);
-        toast.success('Video deleted successfully');
+        toast.success('Video berhasil dihapus');
         fetchVideos();
       } catch (error) {
-        toast.error(error.response?.data?.message || 'Failed to delete video');
+        toast.error(error.response?.data?.message || 'Gagal menghapus video');
       }
     }
   };
@@ -118,7 +118,7 @@ const VideoAdmin = () => {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  // Filter videos based on search term
+  // Filter video berdasarkan kata kunci pencarian
   const filteredVideos = videos.filter(video =>
     video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     video.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -126,18 +126,18 @@ const VideoAdmin = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      {/* Desktop Sidebar - always visible on larger screens */}
+      {/* Sidebar Desktop - selalu terlihat di layar besar */}
       <div className="hidden lg:block">
         <Sidebar />
       </div>
       
-      {/* Mobile Sidebar Toggle */}
+      {/* Toggle Sidebar Mobile */}
       {/* <MobileSidebarToggle 
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         isOpen={isSidebarOpen}
       /> */}
       
-      {/* Mobile Sidebar - conditionally shown */}
+      {/* Sidebar Mobile - ditampilkan secara kondisional */}
       {isSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-40">
           <div 
@@ -150,15 +150,15 @@ const VideoAdmin = () => {
         </div>
       )}
 
-      {/* Main Content */}
+      {/* Konten Utama */}
       <div className="flex-1 p-4 lg:p-8 lg:ml-64 transition-all duration-300">
         <div className="max-w-7xl mx-auto">
-          {/* Header with search and actions */}
+          {/* Header dengan pencarian dan aksi */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Video Management</h1>
-                <p className="text-gray-600 mt-1">Manage and organize your video content</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Manajemen Video</h1>
+                <p className="text-gray-600 mt-1">Kelola dan atur konten video Anda</p>
               </div>
               
               <button
@@ -166,11 +166,11 @@ const VideoAdmin = () => {
                 className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all flex items-center justify-center gap-2 shadow-md"
               >
                 <FiPlus className="w-5 h-5" />
-                <span>Add Video</span>
+                <span>Tambah Video</span>
               </button>
             </div>
             
-            {/* Search and Filter Bar */}
+            {/* Bar Pencarian dan Filter */}
             <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-200">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
@@ -179,7 +179,7 @@ const VideoAdmin = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Search videos..."
+                    placeholder="Cari video..."
                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -194,8 +194,8 @@ const VideoAdmin = () => {
                       onChange={(e) => setSortBy(e.target.value)}
                       className="bg-transparent border-none focus:ring-0 text-sm text-gray-700 outline-none"
                     >
-                      <option value="newest">Newest First</option>
-                      <option value="oldest">Oldest First</option>
+                      <option value="newest">Terbaru</option>
+                      <option value="oldest">Terlama</option>
                       <option value="title">A-Z</option>
                     </select>
                   </div>
@@ -204,7 +204,7 @@ const VideoAdmin = () => {
             </div>
           </div>
 
-          {/* Content */}
+          {/* Konten */}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -215,27 +215,27 @@ const VideoAdmin = () => {
                 <FaYoutube className="h-12 w-12" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {searchTerm ? 'No matching videos found' : 'No videos available'}
+                {searchTerm ? 'Tidak ada video yang cocok' : 'Belum ada video tersedia'}
               </h3>
               <p className="text-gray-500 mb-6">
-                {searchTerm ? 'Try adjusting your search or filter' : 'Get started by adding your first video'}
+                {searchTerm ? 'Coba sesuaikan pencarian atau filter Anda' : 'Mulailah dengan menambahkan video pertama Anda'}
               </p>
               <button
                 onClick={openAddModal}
                 className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all flex items-center justify-center gap-2 mx-auto shadow-md"
               >
                 <FiPlus className="w-5 h-5" />
-                <span>Add Video</span>
+                <span>Tambah Video</span>
               </button>
             </div>
           ) : (
             <>
               <div className="mb-4 text-sm text-gray-500 flex items-center gap-2">
-                <span>Showing {filteredVideos.length} of {videos.length} videos</span>
+                <span>Menampilkan {filteredVideos.length} dari {videos.length} video</span>
                 <span className="h-1 w-1 rounded-full bg-gray-400"></span>
                 <span className="flex items-center gap-1">
                   <FiClock className="w-3 h-3" />
-                  Sorted by {sortBy === 'newest' ? 'newest' : sortBy === 'oldest' ? 'oldest' : 'A-Z'}
+                  Diurutkan berdasarkan {sortBy === 'newest' ? 'terbaru' : sortBy === 'oldest' ? 'terlama' : 'A-Z'}
                 </span>
               </div>
               
@@ -266,7 +266,7 @@ const VideoAdmin = () => {
                       <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
                         <span className="text-xs text-gray-500 flex items-center gap-1">
                           <FiClock className="w-3 h-3" />
-                          {new Date(video.created_at).toLocaleDateString('en-US', {
+                          {new Date(video.created_at).toLocaleDateString('id-ID', {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric'
@@ -283,7 +283,7 @@ const VideoAdmin = () => {
                           <button
                             onClick={() => handleDelete(video.id)}
                             className="text-red-600 hover:text-red-800 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
-                            title="Delete"
+                            title="Hapus"
                           >
                             <FiTrash2 className="w-4 h-4" />
                           </button>
@@ -304,7 +304,7 @@ const VideoAdmin = () => {
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    {currentVideo ? 'Edit Video' : 'Add New Video'}
+                    {currentVideo ? 'Edit Video' : 'Tambah Video Baru'}
                   </h2>
                   <button
                     onClick={() => setIsModalOpen(false)}
@@ -318,7 +318,7 @@ const VideoAdmin = () => {
                   <div className="space-y-5">
                     <div>
                       <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                        Title <span className="text-red-500">*</span>
+                        Judul <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -328,13 +328,13 @@ const VideoAdmin = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                        placeholder="Enter video title"
+                        placeholder="Masukkan judul video"
                       />
                     </div>
 
                     <div>
                       <label htmlFor="youtube_link" className="block text-sm font-medium text-gray-700 mb-2">
-                        YouTube URL <span className="text-red-500">*</span>
+                        URL YouTube <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -353,7 +353,7 @@ const VideoAdmin = () => {
                       </div>
                       {formData.youtube_link && (
                         <div className="mt-2 text-xs text-gray-500">
-                          Preview: 
+                          Pratinjau: 
                           <a 
                             href={formData.youtube_link} 
                             target="_blank" 
@@ -368,7 +368,7 @@ const VideoAdmin = () => {
 
                     <div>
                       <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                        Description
+                        Deskripsi
                       </label>
                       <textarea
                         id="description"
@@ -377,7 +377,7 @@ const VideoAdmin = () => {
                         onChange={handleInputChange}
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                        placeholder="Enter video description (optional)"
+                        placeholder="Masukkan deskripsi video (opsional)"
                       />
                     </div>
                   </div>
@@ -388,7 +388,7 @@ const VideoAdmin = () => {
                       onClick={() => setIsModalOpen(false)}
                       className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                     >
-                      Cancel
+                      Batal
                     </button>
                     <button
                       type="submit"
@@ -401,17 +401,17 @@ const VideoAdmin = () => {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Processing...
+                          Memproses...
                         </>
                       ) : currentVideo ? (
                         <>
                           <FiCheck className="w-4 h-4" />
-                          Update Video
+                          Perbarui Video
                         </>
                       ) : (
                         <>
                           <FiPlus className="w-4 h-4" />
-                          Add Video
+                          Tambah Video
                         </>
                       )}
                     </button>

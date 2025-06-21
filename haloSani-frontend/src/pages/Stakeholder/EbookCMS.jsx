@@ -24,7 +24,7 @@ const EbookCMS = () => {
     try {
       const res = await api.get('/admin/ebooks');
   
-      // Format URL gambar seperti di Event CMS
+      // Format URL gambar
       const ebooksWithImageUrl = res.data.map(ebook => ({
         ...ebook,
         imageUrl: ebook.image ? `http://localhost:8000/storage/${ebook.image}` : null
@@ -32,8 +32,8 @@ const EbookCMS = () => {
   
       setEbooks(ebooksWithImageUrl);
     } catch (error) {
-      console.error('Failed to fetch ebooks:', error);
-      setError('Failed to load ebooks. Please try again.');
+      console.error('Gagal mengambil data ebook:', error);
+      setError('Gagal memuat ebook. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -53,11 +53,11 @@ const EbookCMS = () => {
       // Validasi gambar
       const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validFormats.includes(file.type)) {
-        setError('Please upload a valid image (jpeg, png, jpg)');
+        setError('Harap unggah gambar yang valid (jpeg, png, jpg)');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        setError('File size should not exceed 2MB');
+        setError('Ukuran file tidak boleh melebihi 2MB');
         return;
       }
 
@@ -77,7 +77,7 @@ const EbookCMS = () => {
     setError(null);
 
     if (!formData.title.trim() || !formData.link.trim()) {
-      setError("Title and Link are required");
+      setError("Judul dan Link harus diisi");
       setIsLoading(false);
       return;
     }
@@ -111,10 +111,10 @@ const EbookCMS = () => {
       
       resetForm();
       await fetchEbooks();
-      navigate('/admin/ebook');
+      navigate('/stakholder/ebook');
     } catch (error) {
-      console.error('Failed to save ebook:', error);
-      setError(error.response?.data?.message || 'Failed to save ebook. Please try again.');
+      console.error('Gagal menyimpan ebook:', error);
+      setError(error.response?.data?.message || 'Gagal menyimpan ebook. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +133,7 @@ const EbookCMS = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this ebook?')) return;
+    if (!window.confirm('Apakah Anda yakin ingin menghapus ebook ini?')) return;
     
     setIsLoading(true);
     try {
@@ -144,8 +144,8 @@ const EbookCMS = () => {
       });
       await fetchEbooks();
     } catch (error) {
-      console.error('Failed to delete ebook:', error);
-      setError('Failed to delete ebook. Please try again.');
+      console.error('Gagal menghapus ebook:', error);
+      setError('Gagal menghapus ebook. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -171,7 +171,7 @@ const EbookCMS = () => {
       localStorage.removeItem('admin_token');
       navigate('/stakeholder/login');
     } catch (error) {
-      console.error('Logout failed', error);
+      console.error('Logout gagal', error);
     }
   };
 
@@ -181,54 +181,51 @@ const EbookCMS = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      {/* Desktop Sidebar */}
+      {/* Sidebar Desktop */}
       <Sidebar onLogout={handleLogout} />
       
-      {/* Mobile Sidebar Toggle */}
-      {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
-
-      {/* Main Content */}
+      {/* Konten Utama */}
       <div className="flex-1 md:ml-72 p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            {editingEbook ? 'Edit Ebook' : 'Add New Ebook'}
+            {editingEbook ? 'Edit Ebook' : 'Tambah Ebook Baru'}
           </h1>
           <button 
-            onClick={() => navigate('/admin/ebook')}
+            onClick={() => navigate('/stakholder/ebook')}
             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition duration-200"
           >
-            Back to Ebooks
+            Kembali ke Daftar Ebook
           </button>
         </div>
 
-        {/* Error Message */}
+        {/* Pesan Error */}
         {error && (
           <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
             <p>{error}</p>
           </div>
         )}
 
-        {/* Ebook Form */}
+        {/* Form Ebook */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Title Field */}
+            {/* Field Judul */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ebook Title*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Judul Ebook*</label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter ebook title"
+                placeholder="Masukkan judul ebook"
                 required
                 disabled={isLoading}
               />
             </div>
 
-            {/* Link Field */}
+            {/* Field Link */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Download Link*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Link Download*</label>
               <input
                 type="url"
                 name="link"
@@ -241,24 +238,24 @@ const EbookCMS = () => {
               />
             </div>
 
-            {/* Description Field */}
+            {/* Field Deskripsi */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
               <textarea
                 name="short_description"
                 value={formData.short_description}
                 onChange={handleInputChange}
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter a brief description"
+                placeholder="Masukkan deskripsi singkat"
                 disabled={isLoading}
               />
             </div>
 
-            {/* Cover Image Upload */}
+            {/* Upload Cover */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {editingEbook ? 'Update Cover Image' : 'Upload Cover Image'}
+                {editingEbook ? 'Perbarui Cover' : 'Unggah Cover'}
               </label>
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-1">
@@ -277,8 +274,8 @@ const EbookCMS = () => {
                       <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                       </svg>
-                      <span className="text-sm text-gray-600">Click to upload cover image</span>
-                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Max 2MB)</span>
+                      <span className="text-sm text-gray-600">Klik untuk mengunggah cover</span>
+                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Maks 2MB)</span>
                     </label>
                   </div>
                 </div>
@@ -296,7 +293,7 @@ const EbookCMS = () => {
                         }}
                       />
                       <div className="p-2 text-center text-sm text-gray-600">
-                        Current Cover
+                        Cover Saat Ini
                       </div>
                     </div>
                   </div>
@@ -312,7 +309,7 @@ const EbookCMS = () => {
               className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
               disabled={isLoading}
             >
-              Clear Form
+              Bersihkan Form
             </button>
             <button
               type="submit"
@@ -325,26 +322,26 @@ const EbookCMS = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Processing...
+                  Memproses...
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
-                  {editingEbook ? 'Update Ebook' : 'Add Ebook'}
+                  {editingEbook ? 'Perbarui Ebook' : 'Tambah Ebook'}
                 </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Ebooks List */}
+        {/* Daftar Ebook */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">All Ebooks</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Semua Ebook</h2>
             <span className="text-sm text-gray-500">
-              {ebooks.length} {ebooks.length === 1 ? 'ebook' : 'ebooks'} found
+              {ebooks.length} {ebooks.length === 1 ? 'ebook' : 'ebook'} ditemukan
             </span>
           </div>
           
@@ -361,16 +358,16 @@ const EbookCMS = () => {
                       Cover
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Title
+                      Judul
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Description
+                      Deskripsi
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Link
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Aksi
                     </th>
                   </tr>
                 </thead>
@@ -405,10 +402,10 @@ const EbookCMS = () => {
                               rel="noopener noreferrer"
                               className="text-sm text-blue-600 hover:text-blue-900 truncate max-w-xs block"
                             >
-                              Download Link
+                              Link Download
                             </a>
                           ) : (
-                            <span className="text-sm text-gray-500">N/A</span>
+                            <span className="text-sm text-gray-500">Tidak tersedia</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -424,7 +421,7 @@ const EbookCMS = () => {
                             className="text-red-600 hover:text-red-900"
                             disabled={isLoading}
                           >
-                            Delete
+                            Hapus
                           </button>
                         </td>
                       </tr>
@@ -432,7 +429,7 @@ const EbookCMS = () => {
                   ) : (
                     <tr>
                       <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                        No ebooks found. Add your first ebook!
+                        Tidak ada ebook ditemukan. Tambahkan ebook pertama Anda!
                       </td>
                     </tr>
                   )}

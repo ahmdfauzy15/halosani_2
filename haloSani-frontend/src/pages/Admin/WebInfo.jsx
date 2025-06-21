@@ -116,7 +116,7 @@ const WebInfoAdmin = () => {
   const handleDelete = async () => {
     if (!webInfo) return;
     
-    if (!window.confirm('Are you sure you want to delete this website information?')) return;
+    if (!window.confirm('Apakah Anda yakin ingin menghapus informasi situs web ini?')) return;
     
     setIsLoading(true);
     try {
@@ -160,7 +160,7 @@ const WebInfoAdmin = () => {
       <div className="flex-1 md:ml-72 p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            Website Information
+            Informasi Website
           </h1>
           {isEditing && (
             <button 
@@ -174,7 +174,7 @@ const WebInfoAdmin = () => {
               }}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition duration-200 flex items-center"
             >
-              <FiChevronLeft className="mr-1" /> Back
+              <FiChevronLeft className="mr-1" /> Kembali
             </button>
           )}
         </div>
@@ -195,7 +195,7 @@ const WebInfoAdmin = () => {
             {webInfo ? (
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                  <h2 className="text-xl font-semibold text-gray-800">Current Website Information</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">Informasi Situs Web Terkini</h2>
                   <div className="flex space-x-2">
                     <button
                       onClick={() => setIsEditing(true)}
@@ -216,22 +216,22 @@ const WebInfoAdmin = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-2 space-y-4">
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Title</h3>
+                        <h3 className="text-lg font-medium text-gray-900">Judul</h3>
                         <p className="mt-1 text-gray-600">{webInfo.title}</p>
                       </div>
 
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Contact</h3>
+                        <h3 className="text-lg font-medium text-gray-900">Kontak</h3>
                         <p className="mt-1 text-gray-600">{webInfo.contact}</p>
                       </div>
 
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Address</h3>
+                        <h3 className="text-lg font-medium text-gray-900">Alamat</h3>
                         <p className="mt-1 text-gray-600">{webInfo.address}</p>
                       </div>
 
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Description</h3>
+                        <h3 className="text-lg font-medium text-gray-900">Deskripsi</h3>
                         <div 
                           className="mt-1 text-gray-600 whitespace-pre-line"
                           dangerouslySetInnerHTML={{ __html: webInfo.description }}
@@ -241,7 +241,7 @@ const WebInfoAdmin = () => {
 
                     {webInfo.imageUrl && (
                       <div className="flex flex-col">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">Image</h3>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">Cover Gambar</h3>
                         <div className="bg-gray-100 rounded-lg overflow-hidden">
                           <img 
                             src={webInfo.imageUrl} 
@@ -280,52 +280,52 @@ const WebInfoAdmin = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Judul*</label>
                 <input
                   type="text"
                   {...register('title', { required: 'Title is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Website title"
+                  placeholder="Judul Website"
                 />
                 {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Contact*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Kontak*</label>
                 <input
                   type="text"
                   {...register('contact', { required: 'Contact is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Contact information"
+                  placeholder="Informasi Kontak"
                 />
                 {errors.contact && <p className="mt-1 text-sm text-red-600">{errors.contact.message}</p>}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Alamat*</label>
                 <input
                   type="text"
                   {...register('address', { required: 'Address is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Physical address"
+                  placeholder="Alamat Lengkap"
                 />
                 {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi*</label>
                 <textarea
                   rows={6}
                   {...register('description', { required: 'Description is required' })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter detailed description about your website"
+                  placeholder="Masukan Deskripsi Detil"
                 />
                 {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
               </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {webInfo?.image ? 'Update Image' : 'Upload Image'}
+                  {webInfo?.image ? 'Perbarui Gambar' : 'Upload Gambar'}
                 </label>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-1">
@@ -342,7 +342,7 @@ const WebInfoAdmin = () => {
                         className="cursor-pointer flex flex-col items-center justify-center p-4"
                       >
                         <FiUpload className="w-12 h-12 text-gray-400 mb-2" />
-                        <span className="text-sm text-gray-600">Click to upload image</span>
+                        <span className="text-sm text-gray-600">Click Untuk Upload Gambar</span>
                         <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Max 2MB)</span>
                       </label>
                     </div>
@@ -361,7 +361,7 @@ const WebInfoAdmin = () => {
                           }}
                         />
                         <div className="p-2 text-center text-sm text-gray-600">
-                          {selectedImage ? 'New Image Preview' : 'Current Image'}
+                          {selectedImage ? 'Gambar Baru' : 'Gambar Saat Ini'}
                         </div>
                       </div>
                     </div>
@@ -384,7 +384,7 @@ const WebInfoAdmin = () => {
                 className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
                 disabled={isLoading}
               >
-                Cancel
+                Batal
               </button>
               <button
                 type="submit"
@@ -402,7 +402,7 @@ const WebInfoAdmin = () => {
                 ) : (
                   <>
                     <FiSave className="mr-2" /> 
-                    {webInfo ? 'Update Information' : 'Save Information'}
+                    {webInfo ? 'Perbarui Informasi' : 'Simpan Informasi'}
                   </>
                 )}
               </button>

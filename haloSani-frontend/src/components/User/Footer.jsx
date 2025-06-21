@@ -76,22 +76,22 @@ const Footer = () => {
 
   const footerLinks = [
     {
-      title: 'Developer Team',
+      title: 'Tim Pengembang',
       links: [
-        { name: 'About Us', url: 'user/webinfopage' },
-        { name: 'Our Team', url: 'user/team' },
-        { name: 'Send Feedbacks', url: '/user/feedback' },
+        { name: 'Tentang Kami', url: 'user/webinfopage' },
+        { name: 'Tim Kami', url: 'user/team' },
+        { name: 'Kirim Masukan Anda', url: '/user/feedback' },
 
       ]
     },
     {
-      title: 'Resources',
+      title: 'Fitur Utama',
       links: [
         { name: 'Blog', url: 'user/blogs' },
         { name: 'Ebook', url: 'user/ebooks' },
         { name: 'Video', url: 'user/videos' },
         { name: 'FAQ', url: 'user/f&q' },
-        { name: 'Profesional Info', url: 'user/infopsikolog' }
+        { name: 'Info Profesional', url: 'user/infopsikolog' }
 
 
       ]
@@ -138,7 +138,7 @@ const Footer = () => {
           >
             <h3 className="text-xl font-bold mb-6 flex items-center">
               <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-                Having Problems?
+                Ada Laporan?
               </span>
             </h3>
             
@@ -149,7 +149,7 @@ const Footer = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Report Your Problems
+                Lakukan Pelaporan
               </motion.button>
             ) : (
               <motion.div 
@@ -158,7 +158,7 @@ const Footer = () => {
                 animate={{ opacity: 1, height: 'auto' }}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h4 className="text-lg font-medium">Send us a message</h4>
+                  <h4 className="text-lg font-medium">Kirim Laporan Anda</h4>
                   <button 
                     onClick={() => setIsFormOpen(false)}
                     className="text-gray-400 hover:text-white"
@@ -174,12 +174,12 @@ const Footer = () => {
                     animate={{ opacity: 1 }}
                   >
                     <FiCheckCircle className="text-green-400 mr-2" />
-                    <span>Thank you! Your message has been sent.</span>
+                    <span>Terima Kasih! Laporan Kamu dikirim.</span>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
+                      <label htmlFor="name" className="block text-sm font-medium mb-1">Nama</label>
                       <input
                         type="text"
                         id="name"
@@ -203,7 +203,7 @@ const Footer = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
+                      <label htmlFor="message" className="block text-sm font-medium mb-1">Pesan</label>
                       <textarea
                         id="message"
                         name="message"
@@ -225,12 +225,12 @@ const Footer = () => {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Sending...
+                          Mengirim Pesan...
                         </>
                       ) : (
                         <>
                           <FiSend className="mr-2" />
-                          Send Message
+                          Kirim Pesan
                         </>
                       )}
                     </button>
@@ -274,7 +274,7 @@ const Footer = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
+            <h3 className="text-lg font-semibold mb-4">Terhubung Dengan Kami</h3>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
                 <motion.a
@@ -314,9 +314,9 @@ const Footer = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p>&copy; {new Date().getFullYear()} HaloSani Mental Health Platform.</p>
+          <p>&copy; {new Date().getFullYear()} Platform Kesehatan Mental HaloSani.</p>
           <div className="mt-2 text-sm">
-            <span className="opacity-75">Made with ❤️ for better mental health</span>
+            <span className="opacity-75">Dibuat dengan ❤️ untuk kesehatan mental yang lebih baik</span>
           </div>
         </motion.div>
       </div>

@@ -124,7 +124,7 @@ const Login = () => {
             transition={{ delay: 0.4 }}
             className="text-3xl font-bold text-white"
           >
-            Welcome Back
+            Selamat Datang Kembali
           </motion.h1>
           <motion.p 
             initial={{ y: -10, opacity: 0 }}
@@ -132,7 +132,7 @@ const Login = () => {
             transition={{ delay: 0.5 }}
             className="text-blue-100 mt-2"
           >
-            Your mental health matters to us
+             Kesehatan mental Anda penting bagi kami
           </motion.p>
         </div>
         
@@ -154,7 +154,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all"
-                  placeholder="Email Address"
+                  placeholder="Alamat Email"
                   required
                 />
               </div>
@@ -196,7 +196,7 @@ const Login = () => {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600">
-                  Remember me
+                  Ingatkan
                 </label>
               </div>
 
@@ -206,7 +206,7 @@ const Login = () => {
                   className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
                   onClick={() => navigate('/forgot-password')}
                 >
-                  Forgot password?
+                  Lupa kata sandi?
                 </button>
               </div>
             </motion.div>
@@ -231,7 +231,7 @@ const Login = () => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center space-x-2">
-                    <span className="font-semibold">Continue Your Journey</span>
+                    <span className="font-semibold">Lanjutkan Perjalanan Anda</span>
                     <FiArrowRight className="w-4 h-4" />
                   </div>
                 )}
@@ -246,12 +246,12 @@ const Login = () => {
             transition={{ delay: 1.0 }}
           >
             <p className="text-sm text-gray-600">
-              New to our community?{' '}
+              Baru Bergabung?{' '}
               <button 
                 onClick={() => navigate('/user/register')}
                 className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
               >
-                Create an account
+                Buat Akun Sekarang
               </button>
             </p>
           </motion.div>

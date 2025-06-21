@@ -86,7 +86,7 @@ const AdminLogin = () => {
         {/* Decorative Header */}
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-center">
           <h1 className="text-3xl font-bold text-white">Admin Portal</h1>
-          <p className="text-blue-100 mt-2">Enter your credentials to continue</p>
+          <p className="text-blue-100 mt-2">Masukkan kredensial Anda untuk melanjutkan</p>
         </div>
 
         {/* Login Form */}
@@ -105,7 +105,7 @@ const AdminLogin = () => {
                   type="text"
                   name="username"
                   className={`block w-full pl-10 pr-3 py-3 border ${errors.username ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
-                  placeholder="Enter your username"
+                  placeholder="masukan username"
                   value={formData.username}
                   onChange={handleChange}
                   required
@@ -129,7 +129,7 @@ const AdminLogin = () => {
                   type="password"
                   name="password"
                   className={`block w-full pl-10 pr-3 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
-                  placeholder="Enter your password"
+                  placeholder="masukan password"
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -160,7 +160,7 @@ const AdminLogin = () => {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
+                  ingatkan saya
                 </label>
               </div>
 
@@ -189,7 +189,7 @@ const AdminLogin = () => {
 
           {/* Footer */}
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>© {new Date().getFullYear()} HaloSani Web App. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Aplikasi Web HaloSani.</p>
           </div>
         </div>
       </div>

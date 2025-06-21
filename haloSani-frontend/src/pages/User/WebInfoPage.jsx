@@ -199,7 +199,7 @@ const WebInfoPage = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90"
           >
-            Your journey to mental wellness starts here
+            Perjalanan Anda menuju kesehatan mental dimulai di sini
           </motion.p>
           
           {/* Animated mental health icons */}
@@ -270,7 +270,7 @@ const WebInfoPage = () => {
                   transition={{ delay: 0.8 }}
                   className="text-3xl md:text-4xl font-bold text-gray-800 mb-6"
                 >
-                  Our <span className="text-blue-600">Mission</span>
+                  Misi <span className="text-blue-600">Kami</span>
                 </motion.h2>
                 <motion.div 
                   initial={{ opacity: 0 }}
@@ -288,9 +288,9 @@ const WebInfoPage = () => {
                   className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4"
                 >
                   {[
-                    { value: "100%", label: "Compassion" },
-                    { value: "24/7", label: "Support" },
-                    { value: "365", label: "Days/Year" }
+                    { value: "100%", label: "Kasih Sayang" },
+                    { value: "24/7", label: "Dukungan" },
+                    { value: "365", label: "Hari/Tahun" }
                   ].map((stat, index) => (
                     <motion.div
                       key={index}
@@ -323,10 +323,10 @@ const WebInfoPage = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              We're Here <span className="text-blue-600">For You</span>
+              Kami Disni <span className="text-blue-600">Untuk Anda</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Reach out anytime - your mental health is our priority
+              Hubungi kami kapan saja - kesehatan mental Anda adalah prioritas kami
             </p>
           </motion.div>
 
@@ -351,7 +351,7 @@ const WebInfoPage = () => {
               },
               {
                 icon: <FiMapPin className="text-purple-600 text-2xl" />,
-                title: "Address",
+                title: "Alamat",
                 content: webInfo.address || '123 Main Street\nCity, Country',
                 color: "bg-purple-100"
               }
@@ -389,7 +389,7 @@ const WebInfoPage = () => {
             transition={{ type: "spring" }}
             className="text-3xl md:text-4xl font-bold text-gray-800 mb-8"
           >
-            Join Our <span className="text-blue-600">Community</span>
+            Bergabung Dengan <span className="text-blue-600">Kami</span>
           </motion.h2>
           
           <motion.div 
@@ -435,7 +435,7 @@ const WebInfoPage = () => {
               }}
               className="text-lg md:text-xl text-gray-700 italic"
             >
-              "Your mental health is a priority. Your happiness is essential. Your self-care is a necessity."
+              "Kesehatan mental Anda adalah prioritas. Kebahagiaan Anda penting. Pengembangan diri Anda adalah suatu keharusan."
             </motion.p>
           </motion.div>
         </div>

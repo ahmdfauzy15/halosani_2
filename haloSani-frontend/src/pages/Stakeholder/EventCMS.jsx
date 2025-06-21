@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import Sidebar from '../../components/Admin/Sidebars';
 // import MobileSidebarToggle from '../../components/Admin/MobileSidebarToggle';
-
 const EventCMS = () => {
   const [events, setEvents] = useState([]);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -31,8 +30,8 @@ const EventCMS = () => {
       }));
       setEvents(eventsWithImageUrl);
     } catch (error) {
-      console.error('Failed to fetch events', error);
-      setError('Failed to load events. Please try again.');
+      console.error('Gagal mengambil data event', error);
+      setError('Gagal memuat event. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -52,11 +51,11 @@ const EventCMS = () => {
       // Validasi gambar
       const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validFormats.includes(file.type)) {
-        setError('Please upload a valid image (jpeg, png, jpg)');
+        setError('Harap unggah gambar yang valid (jpeg, png, jpg)');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        setError('File size should not exceed 2MB');
+        setError('Ukuran file tidak boleh melebihi 2MB');
         return;
       }
 
@@ -76,7 +75,7 @@ const EventCMS = () => {
     setError(null);
 
     if (!formData.title.trim() || !formData.description.trim()) {
-      setError("Title and Description are required");
+      setError("Judul dan Deskripsi wajib diisi");
       setIsLoading(false);
       return;
     }
@@ -112,10 +111,10 @@ const EventCMS = () => {
       
       resetForm();
       await fetchEvents();
-      navigate('/admin/event-cms');
+      navigate('/stakholder/event-cms');
     } catch (error) {
-      console.error('Failed to save event:', error);
-      setError(error.response?.data?.message || 'Failed to save event. Please try again.');
+      console.error('Gagal menyimpan event:', error);
+      setError(error.response?.data?.message || 'Gagal menyimpan event. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +134,7 @@ const EventCMS = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    if (!window.confirm('Apakah Anda yakin ingin menghapus event ini?')) return;
     
     setIsLoading(true);
     try {
@@ -146,8 +145,8 @@ const EventCMS = () => {
       });
       await fetchEvents();
     } catch (error) {
-      console.error('Failed to delete event:', error);
-      setError('Failed to delete event. Please try again.');
+      console.error('Gagal menghapus event:', error);
+      setError('Gagal menghapus event. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -174,7 +173,7 @@ const EventCMS = () => {
       localStorage.removeItem('admin_token');
       navigate('/stakeholder/login');
     } catch (error) {
-      console.error('Logout failed', error);
+      console.error('Logout gagal', error);
     }
   };
 
@@ -184,54 +183,54 @@ const EventCMS = () => {
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
-      {/* Desktop Sidebar */}
+      {/* Sidebar Desktop */}
       <Sidebar onLogout={handleLogout} />
       
-      {/* Mobile Sidebar Toggle */}
+      {/* Toggle Sidebar Mobile */}
       {/* <MobileSidebarToggle onLogout={handleLogout} /> */}
 
-      {/* Main Content */}
+      {/* Konten Utama */}
       <div className="flex-1 md:ml-72 p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            {editingEvent ? 'Edit Event' : 'Create New Event'}
+            {editingEvent ? 'Edit Event' : 'Buat Event Baru'}
           </h1>
           <button 
-            onClick={() => navigate('/admin/event-cms')} 
+            onClick={() => navigate('/stakholder/event-cms')} 
             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition duration-200"
           >
-            Back to Events
+            Kembali ke Daftar Event
           </button>
         </div>
 
-        {/* Error Message */}
+        {/* Pesan Error */}
         {error && (
           <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
             <p>{error}</p>
           </div>
         )}
 
-        {/* Event Form */}
+        {/* Form Event */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Title Field */}
+            {/* Field Judul */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Event Title*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Judul Event*</label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter event title"
+                placeholder="Masukkan judul event"
                 required
                 disabled={isLoading}
               />
             </div>
 
-            {/* Date Field */}
+            {/* Field Tanggal */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Event Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Event</label>
               <input
                 type="date"
                 name="event_date"
@@ -242,24 +241,24 @@ const EventCMS = () => {
               />
             </div>
 
-            {/* Description Field */}
+            {/* Field Deskripsi */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi*</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter event description"
+                placeholder="Masukkan deskripsi event"
                 required
                 disabled={isLoading}
               />
             </div>
 
-            {/* Link Field */}
+            {/* Field Link */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">External Link</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Link Eksternal</label>
               <input
                 type="url"
                 name="link"
@@ -271,10 +270,10 @@ const EventCMS = () => {
               />
             </div>
 
-            {/* Image Upload */}
+            {/* Unggah Gambar */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {editingEvent ? 'Update Image' : 'Upload Image*'}
+                {editingEvent ? 'Perbarui Gambar' : 'Unggah Gambar*'}
               </label>
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-1">
@@ -293,8 +292,8 @@ const EventCMS = () => {
                       <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                       </svg>
-                      <span className="text-sm text-gray-600">Click to upload image</span>
-                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Max 2MB)</span>
+                      <span className="text-sm text-gray-600">Klik untuk mengunggah gambar</span>
+                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Maks 2MB)</span>
                     </label>
                   </div>
                 </div>
@@ -312,7 +311,7 @@ const EventCMS = () => {
                         }}
                       />
                       <div className="p-2 text-center text-sm text-gray-600">
-                        Current Image
+                        Gambar Saat Ini
                       </div>
                     </div>
                   </div>
@@ -328,7 +327,7 @@ const EventCMS = () => {
               className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
               disabled={isLoading}
             >
-              Clear Form
+              Bersihkan Form
             </button>
             <button
               type="submit"
@@ -341,26 +340,26 @@ const EventCMS = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Processing...
+                  Memproses...
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
-                  {editingEvent ? 'Update Event' : 'Create Event'}
+                  {editingEvent ? 'Perbarui Event' : 'Buat Event'}
                 </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Events List */}
+        {/* Daftar Event */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">All Events</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Semua Event</h2>
             <span className="text-sm text-gray-500">
-              {events.length} {events.length === 1 ? 'event' : 'events'} found
+              {events.length} {events.length === 1 ? 'event' : 'event'} ditemukan
             </span>
           </div>
           
@@ -374,19 +373,19 @@ const EventCMS = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Image
+                      Gambar
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Title
+                      Judul
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
+                      Tanggal
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Link
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Aksi
                     </th>
                   </tr>
                 </thead>
@@ -401,7 +400,7 @@ const EventCMS = () => {
                                 alt={event.title}
                                 className="h-12 w-16 object-cover rounded"
                                 onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/80'; // Fallback image
+                                e.target.src = 'https://via.placeholder.com/80'; // Gambar fallback
                                 }}
                             />
                             )}
@@ -412,7 +411,7 @@ const EventCMS = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {event.event_date ? new Date(event.event_date).toLocaleDateString() : 'N/A'}
+                            {event.event_date ? new Date(event.event_date).toLocaleDateString() : 'Tidak ada'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -426,7 +425,7 @@ const EventCMS = () => {
                               {event.link}
                             </a>
                           ) : (
-                            <span className="text-sm text-gray-500">N/A</span>
+                            <span className="text-sm text-gray-500">Tidak ada</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -442,7 +441,7 @@ const EventCMS = () => {
                             className="text-red-600 hover:text-red-900"
                             disabled={isLoading}
                           >
-                            Delete
+                            Hapus
                           </button>
                         </td>
                       </tr>
@@ -450,7 +449,7 @@ const EventCMS = () => {
                   ) : (
                     <tr>
                       <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                        No events found. Create your first event!
+                        Tidak ada event ditemukan. Buat event pertama Anda!
                       </td>
                     </tr>
                   )}

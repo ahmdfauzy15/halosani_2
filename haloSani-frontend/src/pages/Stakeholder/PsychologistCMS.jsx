@@ -30,19 +30,18 @@ const PsychologistCMS = () => {
   const navigate = useNavigate();
 
   const fetchPsychologists = async () => {
-  setLoading(true);
-  try {
-    const res = await api.get('/admin/psychologists');
-    // Handle both paginated response and direct array
-    const psychologistsData = res.data.data ? res.data.data : res.data;
-    setPsychologists(psychologistsData);
-  } catch (error) {
-    console.error('Failed to fetch psychologists:', error);
-    setError('Failed to load psychologists. Please try again.');
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    try {
+      const res = await api.get('/admin/psychologists');
+      const psychologistsData = res.data.data ? res.data.data : res.data;
+      setPsychologists(psychologistsData);
+    } catch (error) {
+      console.error('Gagal mengambil data psikolog:', error);
+      setError('Gagal memuat data psikolog. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchPsychologists();
@@ -69,11 +68,11 @@ const PsychologistCMS = () => {
     if (file) {
       const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validFormats.includes(file.type)) {
-        setError('Please upload a valid image (jpeg, png, jpg)');
+        setError('Harap unggah gambar yang valid (jpeg, png, jpg)');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        setError('File size should not exceed 2MB');
+        setError('Ukuran file tidak boleh melebihi 2MB');
         return;
       }
 
@@ -122,63 +121,61 @@ const PsychologistCMS = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  const data = new FormData();
-  
-  // Append all basic fields
-  data.append('name', formData.name);
-  data.append('specialization', formData.specialization);
-  data.append('description', formData.description);
-  data.append('education', formData.education);
-  data.append('experience_years', Number(formData.experience_years));
-  data.append('hospital_affiliation', formData.hospital_affiliation || '');
-  data.append('contact_email', formData.contact_email);
-  data.append('contact_phone', formData.contact_phone);
-  data.append('is_verified', formData.is_verified ? '1' : '0');
+    const data = new FormData();
+    
+    data.append('name', formData.name);
+    data.append('specialization', formData.specialization);
+    data.append('description', formData.description);
+    data.append('education', formData.education);
+    data.append('experience_years', Number(formData.experience_years));
+    data.append('hospital_affiliation', formData.hospital_affiliation || '');
+    data.append('contact_email', formData.contact_email);
+    data.append('contact_phone', formData.contact_phone);
+    data.append('is_verified', formData.is_verified ? '1' : '0');
 
-  // Append arrays properly
-  formData.languages.forEach(lang => data.append('languages[]', lang));
-  formData.treatment_approaches.forEach(approach => data.append('treatment_approaches[]', approach));
+    formData.languages.forEach(lang => data.append('languages[]', lang));
+    formData.treatment_approaches.forEach(approach => data.append('treatment_approaches[]', approach));
 
-  // Append image if exists
-  if (formData.image) {
-    data.append('image', formData.image);
-  }
+    if (formData.image) {
+      data.append('image', formData.image);
+    }
 
-  try {
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+        }
+      };
+
+      if (editingPsychologist) {
+        data.append('_method', 'PUT');
+        await api.post(`/admin/psychologists/${editingPsychologist.id}`, data, config);
+      } else {
+        await api.post('/admin/psychologists', data, config);
       }
-    };
+      
+      resetForm();
+      await fetchPsychologists();
+    } catch (error) {
+      console.error('Gagal menyimpan psikolog:', error);
+      
+      if (error.response?.status === 422) {
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0][0];
+        setError(firstError || 'Terjadi kesalahan validasi');
+      } else {
+        setError(error.response?.data?.message || 'Gagal menyimpan psikolog. Silakan coba lagi.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (editingPsychologist) {
-      data.append('_method', 'PUT');
-      await api.post(`/admin/psychologists/${editingPsychologist.id}`, data, config);
-    } else {
-      await api.post('/admin/psychologists', data, config);
-    }
-    
-    resetForm();
-    await fetchPsychologists();
-  } catch (error) {
-    console.error('Failed to save psychologist:', error);
-    
-    if (error.response?.status === 422) {
-      const errors = error.response.data.errors;
-      const firstError = Object.values(errors)[0][0];
-      setError(firstError || 'Validation error occurred');
-    } else {
-      setError(error.response?.data?.message || 'Failed to save psychologist. Please try again.');
-    }
-  } finally {
-    setLoading(false);
-  }
-};
   const handleEdit = (psychologist) => {
     setEditingPsychologist(psychologist);
     setFormData({
@@ -202,7 +199,7 @@ const PsychologistCMS = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this psychologist?')) return;
+    if (!window.confirm('Apakah Anda yakin ingin menghapus psikolog ini?')) return;
     
     setLoading(true);
     try {
@@ -213,8 +210,8 @@ const PsychologistCMS = () => {
       });
       await fetchPsychologists();
     } catch (error) {
-      console.error('Failed to delete psychologist:', error);
-      setError('Failed to delete psychologist. Please try again.');
+      console.error('Gagal menghapus psikolog:', error);
+      setError('Gagal menghapus psikolog. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -248,7 +245,7 @@ const PsychologistCMS = () => {
       localStorage.removeItem('admin_token');
       navigate('/stakeholder/login');
     } catch (error) {
-      console.error('Logout failed', error);
+      console.error('Logout gagal', error);
     }
   };
 
@@ -259,14 +256,9 @@ const PsychologistCMS = () => {
       <div className="flex-1 md:ml-72 p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            {editingPsychologist ? 'Edit Psychologist' : 'Add New Psychologist'}
+            {editingPsychologist ? 'Edit Psikolog' : 'Tambah Psikolog Baru'}
           </h1>
-          <button 
-            onClick={() => navigate('/admin')}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition duration-200"
-          >
-            Back to Dashboard
-          </button>
+          
         </div>
 
         {error && (
@@ -277,12 +269,12 @@ const PsychologistCMS = () => {
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Basic Info */}
+            {/* Informasi Dasar */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap*</label>
                   <input
                     type="text"
                     name="name"
@@ -296,14 +288,14 @@ const PsychologistCMS = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Specialization*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Spesialisasi*</label>
                   <input
                     type="text"
                     name="specialization"
                     value={formData.specialization}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Clinical Psychology"
+                    placeholder="Psikologi Klinis"
                     required
                     disabled={loading}
                   />
@@ -311,38 +303,38 @@ const PsychologistCMS = () => {
               </div>
             </div>
 
-            {/* Description */}
+            {/* Deskripsi */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi*</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Detailed professional description"
+                placeholder="Deskripsi profesional lengkap"
                 required
                 disabled={loading}
               />
             </div>
 
-            {/* Education & Experience */}
+            {/* Pendidikan & Pengalaman */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Education*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pendidikan*</label>
               <input
                 type="text"
                 name="education"
                 value={formData.education}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Ph.D in Psychology, Harvard University"
+                placeholder="S2 Psikologi, Universitas Indonesia"
                 required
                 disabled={loading}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Years of Experience*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tahun Pengalaman*</label>
               <input
                 type="number"
                 name="experience_years"
@@ -356,23 +348,23 @@ const PsychologistCMS = () => {
               />
             </div>
 
-            {/* Hospital Affiliation */}
+            {/* Afiliasi Rumah Sakit */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hospital Affiliation</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Afiliasi Rumah Sakit</label>
               <input
                 type="text"
                 name="hospital_affiliation"
                 value={formData.hospital_affiliation}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Massachusetts General Hospital"
+                placeholder="Rumah Sakit Umum Pusat Nasional"
                 disabled={loading}
               />
             </div>
 
-            {/* Contact Info */}
+            {/* Informasi Kontak */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Kontak</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
@@ -382,21 +374,21 @@ const PsychologistCMS = () => {
                     value={formData.contact_email}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="doctor@example.com"
+                    placeholder="dokter@example.com"
                     required
                     disabled={loading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Telepon*</label>
                   <input
                     type="tel"
                     name="contact_phone"
                     value={formData.contact_phone}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+62 812 3456 7890"
                     required
                     disabled={loading}
                   />
@@ -404,16 +396,16 @@ const PsychologistCMS = () => {
               </div>
             </div>
 
-            {/* Languages */}
+            {/* Bahasa */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Languages Spoken</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bahasa yang Dikuasai</label>
               <div className="flex mb-2">
                 <input
                   type="text"
                   value={tempLanguage}
                   onChange={(e) => setTempLanguage(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Add language"
+                  placeholder="Tambahkan bahasa"
                   disabled={loading}
                 />
                 <button
@@ -422,7 +414,7 @@ const PsychologistCMS = () => {
                   className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700"
                   disabled={loading}
                 >
-                  Add
+                  Tambah
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -442,16 +434,16 @@ const PsychologistCMS = () => {
               </div>
             </div>
 
-            {/* Treatment Approaches */}
+            {/* Pendekatan Terapi */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Approaches</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pendekatan Terapi</label>
               <div className="flex mb-2">
                 <input
                   type="text"
                   value={tempApproach}
                   onChange={(e) => setTempApproach(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Add approach"
+                  placeholder="Tambahkan pendekatan"
                   disabled={loading}
                 />
                 <button
@@ -460,7 +452,7 @@ const PsychologistCMS = () => {
                   className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700"
                   disabled={loading}
                 >
-                  Add
+                  Tambah
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -480,7 +472,7 @@ const PsychologistCMS = () => {
               </div>
             </div>
 
-            {/* Verification */}
+            {/* Verifikasi */}
             <div className="md:col-span-2">
               <div className="flex items-center">
                 <input
@@ -493,15 +485,15 @@ const PsychologistCMS = () => {
                   disabled={loading}
                 />
                 <label htmlFor="is_verified" className="ml-2 block text-sm text-gray-700">
-                  Verified Professional
+                  Profesional Terverifikasi
                 </label>
               </div>
             </div>
 
-            {/* Image Upload */}
+            {/* Unggah Foto */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {editingPsychologist ? 'Update Profile Photo' : 'Upload Profile Photo'}
+                {editingPsychologist ? 'Perbarui Foto Profil' : 'Unggah Foto Profil'}
               </label>
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-1">
@@ -518,8 +510,8 @@ const PsychologistCMS = () => {
                       className="cursor-pointer flex flex-col items-center justify-center p-4"
                     >
                       <FiUser className="w-12 h-12 text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-600">Click to upload profile photo</span>
-                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Max 2MB)</span>
+                      <span className="text-sm text-gray-600">Klik untuk mengunggah foto profil</span>
+                      <span className="text-xs text-gray-500 mt-1">JPEG, PNG (Maks 2MB)</span>
                     </label>
                   </div>
                 </div>
@@ -537,7 +529,7 @@ const PsychologistCMS = () => {
                         }}
                       />
                       <div className="p-2 text-center text-sm text-gray-600">
-                        Current Photo
+                        Foto Saat Ini
                       </div>
                     </div>
                   </div>
@@ -553,7 +545,7 @@ const PsychologistCMS = () => {
               className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
               disabled={loading}
             >
-              Clear Form
+              Bersihkan Form
             </button>
             <button
               type="submit"
@@ -566,26 +558,26 @@ const PsychologistCMS = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Processing...
+                  Memproses...
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
-                  {editingPsychologist ? 'Update Psychologist' : 'Add Psychologist'}
+                  {editingPsychologist ? 'Perbarui Psikolog' : 'Tambah Psikolog'}
                 </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Psychologists List */}
+        {/* Daftar Psikolog */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">All Psychologists</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Semua Psikolog</h2>
             <span className="text-sm text-gray-500">
-              {psychologists.length} {psychologists.length === 1 ? 'psychologist' : 'psychologists'} found
+              {psychologists.length} {psychologists.length === 1 ? 'psikolog' : 'psikolog'} ditemukan
             </span>
           </div>
           
@@ -599,22 +591,22 @@ const PsychologistCMS = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Photo
+                      Foto
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                      Nama
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Specialization
+                      Spesialisasi
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Contact
+                      Kontak
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      Aksi
                     </th>
                   </tr>
                 </thead>
@@ -637,7 +629,7 @@ const PsychologistCMS = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{psychologist.name}</div>
-                          <div className="text-sm text-gray-500">{psychologist.experience_years} years exp.</div>
+                          <div className="text-sm text-gray-500">{psychologist.experience_years} tahun pengalaman</div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">{psychologist.specialization}</div>
@@ -653,7 +645,7 @@ const PsychologistCMS = () => {
                               ? 'bg-green-100 text-green-800' 
                               : 'bg-yellow-100 text-yellow-800'
                           }`}>
-                            {psychologist.is_verified ? 'Verified' : 'Pending'}
+                            {psychologist.is_verified ? 'Terverifikasi' : 'Menunggu'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -669,7 +661,7 @@ const PsychologistCMS = () => {
                             className="text-red-600 hover:text-red-900"
                             disabled={loading}
                           >
-                            <FiTrash2 className="inline mr-1" /> Delete
+                            <FiTrash2 className="inline mr-1" /> Hapus
                           </button>
                         </td>
                       </tr>
@@ -677,7 +669,7 @@ const PsychologistCMS = () => {
                   ) : (
                     <tr>
                       <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
-                        No psychologists found. Add your first psychologist!
+                        Tidak ada psikolog yang ditemukan. Tambahkan psikolog pertama Anda!
                       </td>
                     </tr>
                   )}

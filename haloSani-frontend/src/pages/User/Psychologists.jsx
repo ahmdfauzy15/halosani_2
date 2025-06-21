@@ -87,7 +87,7 @@ const Psychologists = () => {
             animate={{ y: 0 }}
             className="text-4xl font-bold mb-4"
           >
-            Find Your Psychologist
+            Temukan Psikolog Anda
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -95,7 +95,7 @@ const Psychologists = () => {
             transition={{ delay: 0.2 }}
             className="text-xl opacity-90 max-w-2xl mx-auto"
           >
-            Connect with verified mental health professionals
+            Terhubung dengan profesional kesehatan mental yang terverifikasi
           </motion.p>
         </div>
       </motion.section>
@@ -111,7 +111,7 @@ const Psychologists = () => {
           <div className="relative mb-6">
             <input
               type="text"
-              placeholder="Search by name or specialization"
+              placeholder="Cari Berdasarkan Nama Dan Keahlian"
               className="w-full px-5 py-3 pl-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

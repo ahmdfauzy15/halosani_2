@@ -55,64 +55,64 @@ const Feedback = () => {
   const featureCategories = [
     {
       id: 'login_register',
-      label: 'Login & Registration Process',
-      description: 'How easy was it to create an account and log in?',
+      label: 'Proses Login & Pendaftaran',
+      description: 'Seberapa mudah proses membuat akun dan login?',
       icon: <FiCheck className="mr-2" />
     },
     {
       id: 'event_info',
-      label: 'Event Information',
-      description: 'How useful was the event information provided?',
+      label: 'Informasi Acara',
+      description: 'Seberapa berguna informasi acara yang disediakan?',
       icon: <FiAward className="mr-2" />
     },
     {
       id: 'breath_management',
-      label: 'Breath Management Tools',
-      description: 'How effective were the breathing exercises?',
+      label: 'Alat Manajemen Pernapasan',
+      description: 'Seberapa efektif latihan pernapasan yang disediakan?',
       icon: <FiThumbsUp className="mr-2" />
     },
     {
       id: 'journal_comfort',
-      label: 'Journaling Comfort',
-      description: 'How comfortable was the journaling experience?',
+      label: 'Kenyamanan Journaling',
+      description: 'Seberapa nyaman pengalaman journaling Anda?',
       icon: <FiMessageSquare className="mr-2" />
     },
     {
       id: 'mentor_ai',
-      label: 'AI Mentor Assistance',
-      description: 'How helpful was the AI mentor feature?',
+      label: 'Asisten Mentor AI',
+      description: 'Seberapa membantu fitur mentor AI?',
       icon: <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
     },
     {
       id: 'blog_content',
-      label: 'Blog Content Quality',
-      description: 'How valuable did you find the blog articles?',
+      label: 'Kualitas Konten Blog',
+      description: 'Seberapa berharga artikel blog yang Anda temukan?',
       icon: <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
             </svg>
     },
     {
       id: 'youtube_videos',
-      label: 'YouTube Video Resources',
-      description: 'How useful were the video resources?',
+      label: 'Sumber Daya Video YouTube',
+      description: 'Seberapa berguna video yang disediakan?',
       icon: <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
     },
     {
       id: 'ebook_access',
-      label: 'Ebook Accessibility',
-      description: 'How easy was it to access and use the ebooks?',
+      label: 'Aksesibilitas Ebook',
+      description: 'Seberapa mudah mengakses dan menggunakan ebook?',
       icon: <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
     },
     {
       id: 'feedback_feature',
-      label: 'Feedback Feature Itself',
-      description: 'How easy is this feedback process?',
+      label: 'Fitur Feedback Ini',
+      description: 'Seberapa mudah proses feedback ini?',
       icon: <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
@@ -135,7 +135,7 @@ const Feedback = () => {
         toast.error(
           error.response?.data?.message || 
           error.message || 
-          'Failed to load feedback data'
+          'Gagal memuat data feedback'
         );
         
         if (error.response?.status === 401) {
@@ -182,11 +182,11 @@ const Feedback = () => {
       if (response.data.status === 'success') {
         setShowThankYou(true);
         setTimeout(() => {
-          toast.success(response.data.message || 'Thank you for your feedback!');
+          toast.success(response.data.message || 'Terima kasih atas feedback Anda!');
           navigate('/user/dashboard');
         }, 3000);
       } else {
-        toast.error(response.data.message || 'Failed to submit feedback');
+        toast.error(response.data.message || 'Gagal mengirim feedback');
       }
     } catch (error) {
       console.error('Error submitting feedback:', error);
@@ -196,7 +196,7 @@ const Feedback = () => {
           toast.error(err[0]);
         });
       } else {
-        toast.error(error.response?.data?.message || 'Failed to submit feedback. Please try again.');
+        toast.error(error.response?.data?.message || 'Gagal mengirim feedback. Silakan coba lagi.');
       }
     } finally {
       setSubmitting(false);
@@ -242,10 +242,10 @@ const Feedback = () => {
             <FiHeart className="mx-auto text-red-500 w-24 h-24 fill-current" />
           </motion.div>
           <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-6">
-            Thank You!
+            Terima Kasih!
           </h1>
           <p className="text-xl text-gray-700 mb-8">
-            We truly appreciate your feedback. Your input helps us create a better experience for everyone.
+            Kami sangat menghargai masukan Anda. Feedback Anda membantu kami menciptakan pengalaman yang lebih baik untuk semua orang.
           </p>
           <motion.div
             initial={{ opacity: 0 }}
@@ -259,7 +259,7 @@ const Feedback = () => {
               whileTap={{ scale: 0.95 }}
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg"
             >
-              Back to Dashboard
+              Kembali ke Dashboard
             </motion.button>
           </motion.div>
         </motion.div>
@@ -282,7 +282,7 @@ const Feedback = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            We Value Your Feedback
+            Kami Menghargai Feedback Anda
           </motion.h1>
           <motion.p
             className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto"
@@ -290,7 +290,7 @@ const Feedback = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            Help us improve by sharing your thoughts about your experience
+            Bantu kami meningkatkan layanan dengan berbagi pengalaman Anda
           </motion.p>
           <motion.div 
             className="mt-6 flex justify-center"
@@ -309,7 +309,7 @@ const Feedback = () => {
           </motion.div>
         </div>
 
-        {/* User Information Section */}
+        {/* Bagian Informasi Pengguna */}
         <motion.div
           className="bg-white shadow-xl rounded-2xl p-8 mb-10 backdrop-blur-sm bg-opacity-90"
           initial={{ x: -20, opacity: 0 }}
@@ -320,12 +320,12 @@ const Feedback = () => {
             <div className="p-2 bg-blue-100 rounded-full mr-3">
               <FiUser className="text-blue-600 w-6 h-6" />
             </div>
-            Your Information
+            Informasi Anda
           </h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name <span className="text-red-500">*</span>
+                Nama  <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -335,13 +335,13 @@ const Feedback = () => {
                 className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
                 value={feedbackData.name}
                 onChange={handleGeneralChange}
-                placeholder="Enter your name"
+                placeholder="Masukkan nama Anda(Boleh Samaran)"
               />
             </div>
           </div>
         </motion.div>
 
-        {/* Feedback Form */}
+        {/* Form Feedback */}
         <motion.form
           onSubmit={handleSubmit}
           className="bg-white shadow-2xl rounded-3xl overflow-hidden backdrop-blur-sm bg-opacity-90"
@@ -350,7 +350,7 @@ const Feedback = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="p-8 sm:p-12">
-            {/* Overall Rating */}
+            {/* Rating Keseluruhan */}
             <motion.div 
               className="mb-12 p-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-100"
               initial={{ x: -20, opacity: 0 }}
@@ -363,9 +363,9 @@ const Feedback = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                 </div>
-                Overall Experience
+                Pengalaman Keseluruhan
               </h2>
-              <p className="text-gray-600 mb-6 text-lg">How would you rate your overall experience with our platform?</p>
+              <p className="text-gray-600 mb-6 text-lg">Bagaimana Anda menilai pengalaman keseluruhan dengan platform kami?</p>
               
               <div className="flex items-center justify-center space-x-2 mb-8">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -394,9 +394,9 @@ const Feedback = () => {
                     className="mt-6"
                   >
                     <label htmlFor="overall_reason" className="block text-lg font-medium text-gray-700 mb-3">
-                      {feedbackData.overall_rating <= 2 ? 'What could we improve to make your experience better?' : 
-                       feedbackData.overall_rating >= 4 ? 'What did you enjoy most about your experience?' : 
-                       'What was your experience like?'}
+                      {feedbackData.overall_rating <= 2 ? 'Apa yang bisa kami perbaiki untuk meningkatkan pengalaman Anda?' : 
+                       feedbackData.overall_rating >= 4 ? 'Apa yang paling Anda sukai dari pengalaman Anda?' : 
+                       'Bagaimana pengalaman Anda?'}
                     </label>
                     <motion.textarea
                       id="overall_reason"
@@ -405,7 +405,7 @@ const Feedback = () => {
                       className="w-full px-5 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all shadow-sm"
                       value={feedbackData.overall_reason}
                       onChange={handleGeneralChange}
-                      placeholder="Share your thoughts (optional)"
+                      placeholder="Bagikan pemikiran Anda (opsional)"
                       whileFocus={{ scale: 1.01 }}
                     />
                   </motion.div>
@@ -413,9 +413,9 @@ const Feedback = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Feature Ratings */}
+            {/* Rating Fitur */}
             <div className="space-y-12">
-              <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Feature Ratings</h2>
+              <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Rating Fitur</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {featureCategories.map((feature, index) => (
@@ -451,7 +451,7 @@ const Feedback = () => {
                         </motion.button>
                       ))}
                       <span className="ml-3 text-md font-medium text-gray-500">
-                        {feedbackData[`${feature.id}_rating`] ? `${feedbackData[`${feature.id}_rating`]}/5` : 'Not rated'}
+                        {feedbackData[`${feature.id}_rating`] ? `${feedbackData[`${feature.id}_rating`]}/5` : 'Belum dinilai'}
                       </span>
                     </div>
                     
@@ -465,9 +465,9 @@ const Feedback = () => {
                           className="mt-4"
                         >
                           <label htmlFor={`${feature.id}_reason`} className="block text-md font-medium text-gray-700 mb-2">
-                            {feedbackData[`${feature.id}_rating`] <= 2 ? 'What could we improve about this feature?' : 
-                             feedbackData[`${feature.id}_rating`] >= 4 ? 'What did you like about this feature?' : 
-                             'Any specific feedback about this feature?'}
+                            {feedbackData[`${feature.id}_rating`] <= 2 ? 'Apa yang bisa kami perbaiki dari fitur ini?' : 
+                             feedbackData[`${feature.id}_rating`] >= 4 ? 'Apa yang Anda sukai dari fitur ini?' : 
+                             'Ada feedback khusus tentang fitur ini?'}
                           </label>
                           <motion.textarea
                             id={`${feature.id}_reason`}
@@ -476,7 +476,7 @@ const Feedback = () => {
                             className="w-full px-4 py-3 text-md border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all shadow-sm"
                             value={feedbackData[`${feature.id}_reason`] || ''}
                             onChange={(e) => handleReasonChange(feature.id, e.target.value)}
-                            placeholder="Your thoughts help us improve..."
+                            placeholder="Masukan Anda membantu kami meningkatkan..."
                             whileFocus={{ scale: 1.01 }}
                           />
                         </motion.div>
@@ -487,7 +487,7 @@ const Feedback = () => {
               </div>
             </div>
 
-            {/* Additional Feedback */}
+            {/* Feedback Tambahan */}
             <motion.div 
               className="mt-16 p-8 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100"
               initial={{ opacity: 0 }}
@@ -498,21 +498,21 @@ const Feedback = () => {
                 <div className="p-2 bg-indigo-100 rounded-full mr-3 text-indigo-600">
                   <FiMessageSquare className="w-6 h-6" />
                 </div>
-                Additional Comments
+                Komentar Tambahan
               </h2>
-              <p className="text-gray-600 mb-6 text-lg">Is there anything else you'd like to share about your experience with us?</p>
+              <p className="text-gray-600 mb-6 text-lg">Apakah ada hal lain yang ingin Anda bagikan tentang pengalaman Anda dengan kami?</p>
               <motion.textarea
                 name="additional_feedback"
                 rows={6}
                 className="w-full px-5 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                 value={feedbackData.additional_feedback}
                 onChange={handleGeneralChange}
-                placeholder="Your suggestions, ideas, or any other feedback you'd like to share..."
+                placeholder="Saran, ide, atau feedback lain yang ingin Anda bagikan..."
                 whileFocus={{ scale: 1.01 }}
               />
             </motion.div>
 
-            {/* Submit Button */}
+            {/* Tombol Kirim */}
             <div className="mt-16 flex justify-center">
               <motion.button
                 type="submit"
@@ -527,13 +527,13 @@ const Feedback = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Submitting...
+                    Mengirim...
                   </>
                 ) : (
                   <>
                     <FiSend className="mr-3 w-6 h-6" />
                     <span className="relative z-10">
-                      Submit Your Feedback
+                      Kirim Feedback Anda
                       <motion.span
                         className="absolute -bottom-1 left-0 w-full h-1 bg-white opacity-30"
                         initial={{ scaleX: 0 }}
@@ -559,7 +559,7 @@ const Feedback = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <p className="mb-4">Your honest feedback helps us create a better experience for everyone.</p>
+          <p className="mb-4">Feedback jujur Anda membantu kami menciptakan pengalaman yang lebih baik untuk semua orang.</p>
           <motion.div 
             className="flex justify-center space-x-4"
             animate={{ 

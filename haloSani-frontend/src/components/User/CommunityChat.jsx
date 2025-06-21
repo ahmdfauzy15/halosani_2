@@ -274,7 +274,7 @@ const CommunityChat = () => {
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-t-xl flex justify-between items-center">
               <div className="flex items-center">
                 <FiMessageSquare className="mr-2" />
-                <span className="font-medium">Community Chat</span>
+                <span className="font-medium">Chat Komunitas</span>
               </div>
               <div className="flex items-center space-x-2">
                 <button 

@@ -208,7 +208,7 @@ const OtpVerification = () => {
             transition={{ delay: 0.4 }}
             className="text-3xl font-bold text-white"
           >
-            Verify Your Email
+            Verifikasi Email Anda
           </motion.h1>
           <motion.p 
             initial={{ y: -10, opacity: 0 }}
@@ -216,7 +216,7 @@ const OtpVerification = () => {
             transition={{ delay: 0.5 }}
             className="text-purple-100 mt-2"
           >
-            We've sent a verification code to {email}
+            Kami telah mengirimkan kode verifikasi menuju {email}
           </motion.p>
         </div>
         
@@ -252,7 +252,7 @@ const OtpVerification = () => {
                     setError(null);
                   }}
                   className="w-full pl-10 pr-4 py-3 text-center text-xl font-mono border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
-                  placeholder="6-digit code"
+                  placeholder="6-digit kode"
                   maxLength={6}
                   inputMode="numeric"
                   pattern="\d{6}"
@@ -278,11 +278,11 @@ const OtpVerification = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Verifying...</span>
+                    <span>Verivikasi...</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center space-x-2">
-                    <span className="font-semibold">Verify & Continue</span>
+                    <span className="font-semibold">Verifikasi & Lanjutkan</span>
                     <FiArrowRight className="w-4 h-4" />
                   </div>
                 )}
@@ -297,7 +297,7 @@ const OtpVerification = () => {
             transition={{ delay: 0.8 }}
           >
             <p className="text-sm text-gray-600">
-              Didn't receive the code?{' '}
+              Tidak menerima kode?{' '}
               <button
                 onClick={handleResendOtp}
                 disabled={countdown > 0 || resendLoading}
@@ -309,12 +309,12 @@ const OtpVerification = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Sending...</span>
+                    <span>Mengirim...</span>
                   </span>
                 ) : (
                   <span className="flex items-center justify-center space-x-1">
                     <FiClock className="w-4 h-4" />
-                    <span>Resend OTP {countdown > 0 ? `(${countdown}s)` : ''}</span>
+                    <span>Kirim Ulang OTP {countdown > 0 ? `(${countdown}s)` : ''}</span>
                   </span>
                 )}
               </button>
